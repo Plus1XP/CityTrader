@@ -13,6 +13,7 @@ namespace CityTrader
         {
             CityPresenter presenter = new CityPresenter();
             Console.ReadLine();
+            
         }
     }
 }

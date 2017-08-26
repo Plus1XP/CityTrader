@@ -13,14 +13,13 @@ namespace Presenters
         private CityModel model = new CityModel();
         private CityView view = new CityView();
 
-        private string choice;
+        private int choice;
 
-        public string Message { get; private set; }
+        private bool isChoiceConfirmed = false;
 
-        private CityPresenter()
+        public CityPresenter()
         {
-            Update();
-            SelectCity();
+            Update();            
         }
 
         private void Update()
@@ -30,66 +29,89 @@ namespace Presenters
             do
             {
                 SelectCity();
-            } while (!choice.Equals("Exit"));
+            } while (choice != 0 && isChoiceConfirmed == false);
         }
 
         private void SelectCity()
         {
-            choice = Console.ReadLine();
+            string _choice = Console.ReadLine();
+            choice = int.Parse(_choice);
             switch(choice)
             {
-                case "London":
-                    TravelToCity(choice);
+
+                case 0:
+                    choice = 0;
+                    view.Display("Welcome back!");
                     break;
-                case "Paris":
-                    TravelToCity(choice);
+                case 1:
+                    TravelToCity("London");
                     break;
-                case "Berlin":
-                    TravelToCity(choice);
+                case 2:
+                    TravelToCity("Paris");
                     break;
-                case "Madrid":
-                    TravelToCity(choice);
+                case 3:
+                    TravelToCity("Berlin");
                     break;
-                case "Milan":
-                    TravelToCity(choice);
+                case 4:
+                    TravelToCity("Madrid");
                     break;
-                case "New Yok":
-                    TravelToCity(choice);
+                case 5:
+                    TravelToCity("Milan");
                     break;
-                case "Tokyo":
-                    TravelToCity(choice);
+                case 6:
+                    TravelToCity("New York");
                     break;
-                case "Hong Kong":
-                    TravelToCity(choice);
+                case 7:
+                    TravelToCity("Tokyo");
+                    break;
+                case 8:
+                    TravelToCity("Hong Kong");
+                    break;
+                default:
+                    view.Display("\nYou have entered an incorrect choice, press any key to continue.");
+                    RefreshMenu();
                     break;
             }
         }
 
         private void TravelToCity(string city)
         {
-            if(!choice.Equals(view.CurrentCity))
+            if(!city.Equals(view.CurrentCity))
             {
                 view.Display($"You have arrived at {city}");
-                view.CurrentCity = choice;
+                view.CurrentCity = city;
+                //UpdatePrices Method
+                isChoiceConfirmed = true;
             }
             else
             {
-                view.Display($"You are already at {city}");
+                view.Display($"You are already at {city}, press any key to continue.");
+                RefreshMenu();
             }
+        }
+
+        private void RefreshMenu()
+        {
+            Console.ReadKey();
+            Console.Clear();
+            Menu();
         }
 
         private void Menu()
         {
-            view.Display("Please type in the name of a city to travel to it ");
+            //Day Details will replace the line below
+            view.Display($"Day Details | City:{view.CurrentCity} \n");
+
+            view.Display("Where would you like to travel to? \n");
 
             foreach (var city in model.GetAllCities())
             {
-                view.Display(city.CityName);
+                view.Display($"{ city.CityID} - { city.CityName}");
             }
 
-            view.Display($"You are currently at {view.CurrentCity}");
+            view.Display("\n0 - Stay here!");
 
-            view.Display("Please Select a City to tavel to: ");
+            view.Display("\nPlease Select a City: ");
         }
 
     }
