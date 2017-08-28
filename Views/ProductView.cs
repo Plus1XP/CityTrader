@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Views
 {
-    public class CityView
-    {  
+    public class ProductView
+    {
         public void Display(string display)
         {
             Console.WriteLine(display);

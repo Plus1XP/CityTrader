@@ -38,7 +38,6 @@ namespace Presenters
             choice = int.Parse(_choice);
             switch(choice)
             {
-
                 case 0:
                     choice = 0;
                     view.Display("Welcome back!");
@@ -76,11 +75,12 @@ namespace Presenters
 
         private void TravelToCity(string city)
         {
-            if(!city.Equals(view.CurrentCity))
+            if(!city.Equals(PlayerModel.Instance.LocationName))
             {
                 view.Display($"You have arrived at {city}");
-                view.CurrentCity = city;
-                //UpdatePrices Method
+                PlayerModel.Instance.LocationName = city;
+                //PlayerModel.Instance.LocationID = choice;
+                PlayerModel.Instance.hasProductPriceUpdated = false;
                 isChoiceConfirmed = true;
             }
             else
@@ -98,10 +98,9 @@ namespace Presenters
         }
 
         private void Menu()
-        {
-            //Day Details will replace the line below
-            view.Display($"Day Details | City:{view.CurrentCity} \n");
-
+        {            
+            view.Display(PlayerModel.Instance.DayDetails());
+            
             view.Display("Where would you like to travel to? \n");
 
             foreach (var city in model.GetAllCities())
@@ -111,7 +110,7 @@ namespace Presenters
 
             view.Display("\n0 - Stay here!");
 
-            view.Display("\nPlease Select a City: ");
+            view.Display("\nPlease select a City: ");
         }
 
     }

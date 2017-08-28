@@ -11,7 +11,8 @@ namespace CityTrader
     {
         public static void Main(string[] args)
         {
-            CityPresenter presenter = new CityPresenter();
+            //CityPresenter presenter = new CityPresenter();
+            ProductPresenter presenter = new ProductPresenter();
             Console.ReadLine();
             
         }
