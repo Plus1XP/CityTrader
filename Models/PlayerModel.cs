@@ -12,12 +12,14 @@ namespace Models
         public int Day { get; set; } = 1;
         public int Money { get; set; } = 1000;
         public int Loan { get; set; } = 1000;
+        public int Interest { get; set; }
         public int Score { get; set; }
         public int LocationID { get; set; } = 3;
         public string LocationName { get; set; } = "Berlin";
         public bool isDebtPaid { get; set; } = false;
         public bool isBuying { get; set; }
         public bool hasQuitGame { get; set; }
+        public bool isDayOver { get; set; }
         public bool hasProductPriceUpdated { get; set; } = false;
 
         private static PlayerModel instance = null;
@@ -37,7 +39,7 @@ namespace Models
 
         private PlayerModel()
         {
-
+            InterestRate();
         }
 
         public string DayDetails()
@@ -46,11 +48,19 @@ namespace Models
             return daydetails;            
         }
 
-        public void PayLoan()
+        public void InterestRate()
         {
-            Console.WriteLine("Your loan totals:{0:C} Would you like yo pay now? (y) or (n)", Loan);
-            string response = Console.ReadLine();
-            response = response.ToLower();
+            Interest = Loan * 1/2;
+        }
+
+        public string PayLoan()
+        {
+            string message = $"Your loan totals:{Loan:C} Would you like yo pay now? (y) or (n)";
+            return message;
+        }
+
+        public void PayLoan(string response)
+        {
             if (response == "y")
             {
                 Money -= Loan;
@@ -63,11 +73,12 @@ namespace Models
             }
         }
 
-        public void FinalScore()
+        public string FinalScore()
         {
+            string message;
             Score = Money - Loan;
-            Console.WriteLine("Final Score: {0:C}", Score);
-            Console.ReadKey();
+            message = $"Final Score:{Score:C}";
+            return message;
         }
     }
 }

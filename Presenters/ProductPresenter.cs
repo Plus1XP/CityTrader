@@ -14,16 +14,15 @@ namespace Presenters
         private ProductView view = new ProductView();
 
         private int choice;
-        //private int index;
 
         public ProductPresenter()
         {
-            UpdatePrice();
-            Update();
+            //Update();
         }
 
-        private void Update()
+        public void Update()
         {
+            UpdatePrice();
             Menu();
             do
             {
@@ -66,9 +65,142 @@ namespace Presenters
         {
             string _choice = Console.ReadLine();
             choice = int.Parse(_choice);
-            model.FindProduct(choice);
-            view.Display(model.Message);
+            FindProduct(choice);
+        }
 
+        public void FindProduct(int _index)
+        {
+            int index = model.products.FindIndex(products => products.ProductID == _index);
+            if (model.products.Exists(p => p.ProductID == _index))
+            {
+                ProductModel p = model.products[index];
+                ValidateTransaction(p);
+            }
+        }
+
+        private void ValidateTransaction(ProductModel p)
+        {
+            if (PlayerModel.Instance.isBuying)
+            {
+                if (p.Price <= PlayerModel.Instance.Money)
+                {
+                    ProductQuantity(p);
+                }
+                else
+                {
+                    view.Display("You do not have enough money!");
+                    RefreshMenu();
+                }
+            }
+            else
+            {
+                if (p.Quantity >= 1)
+                {
+                    ProductQuantity(p);
+                }
+                else
+                {
+                    view.Display("You do not stock this item!");
+                    RefreshMenu();
+                }
+            }
+        }
+
+        public void ProductQuantity(ProductModel p)
+        {
+            if (PlayerModel.Instance.isBuying)
+            {
+                int MaxPurchase = PlayerModel.Instance.Money / p.Price;
+                view.Display($"\nYou can afford {MaxPurchase} units. \nHow many would you like to purchase?");
+                string _choice = Console.ReadLine();
+                choice = int.Parse(_choice);
+                //prompt.Response(string.Format("\nYou can afford {0} units \nHow many would you like to purchase?", MaxPurchase), 1, MaxPurchase);
+                if (PlayerModel.Instance.Money >= (p.Price * choice))
+                {
+                    TransactionComplete(p);
+                }
+                else
+                {
+                    view.Display($"you can only afford {MaxPurchase} units");
+                }
+            }
+            else
+            {
+                view.Display($"You can sell {p.Quantity} units \nHow many would you like to sell?");
+                string _choice = Console.ReadLine();
+                choice = int.Parse(_choice);
+                //prompt.Response(string.Format("You can sell {0} units \nHow many would you like to sell?", p.Quantity), 1, p.Quantity);
+                if (p.Quantity <= choice)
+                {
+                    TransactionComplete(p);
+                }
+                else
+                {
+                    view.Display($"You can only sell {p.Quantity} units");
+                }
+            }
+        }
+
+        public void TransactionComplete(ProductModel p)
+        {
+            if (PlayerModel.Instance.isBuying)
+            {
+                if (choice > 1)
+                {
+                    MerchantExchangeBuy(p);
+                    view.Display($"{p.ProductNamePlural} has been added to your inventory!");
+                }
+                else
+                {
+                    MerchantExchangeBuy(p);
+                    view.Display($"{p.ProductName} has been added to your inventory!");
+                }
+                view.Display("Press any key to continue.");
+                RefreshMenu();
+            }
+            else
+            {
+                if (choice > 1)
+                {
+                    MerchantExchangeSell(p);
+                    view.Display($"{p.ProductNamePlural} has been sold!");
+                }
+                else
+                {
+                    MerchantExchangeSell(p);
+                    view.Display($"{p.ProductName} has been sold!");
+                }
+                view.Display("Press any key to continue.");
+                RefreshMenu();
+            }
+        }
+
+        public void MerchantExchangeBuy(ProductModel p)
+        {
+            p.Quantity += choice;
+            PlayerModel.Instance.Money -= (p.Price * choice);
+        }
+
+        public void MerchantExchangeSell(ProductModel p)
+        {
+            p.Quantity -= choice;
+            PlayerModel.Instance.Money += (p.Price * choice);
+        }
+
+        public void ProductInventory()
+        {
+            Console.Clear();
+
+            view.Display(PlayerModel.Instance.DayDetails());
+
+            view.Display("Product Inventory \n");
+
+            foreach (var product in model.GetAllProducts())
+            {
+                view.Display($"{product.ProductID} - {product.ProductName}: {product.Quantity}");
+            }
+
+            view.Display("\n0 - Exit!\n");
         }
 
         private void RefreshMenu()
@@ -80,6 +212,8 @@ namespace Presenters
 
         private void Menu()
         {
+            Console.Clear();
+
             view.Display(PlayerModel.Instance.DayDetails());
 
             view.Display("What would you like to purchase? \n");

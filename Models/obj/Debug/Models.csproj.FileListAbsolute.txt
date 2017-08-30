@@ -3,3 +3,4 @@ D:\OneDrive\Development\Repositories\CityTrader\Models\bin\Debug\Models.pdb
 D:\OneDrive\Development\Repositories\CityTrader\Models\obj\Debug\Models.csprojResolveAssemblyReference.cache
 D:\OneDrive\Development\Repositories\CityTrader\Models\obj\Debug\Models.dll
 D:\OneDrive\Development\Repositories\CityTrader\Models\obj\Debug\Models.pdb
+D:\OneDrive\Development\Repositories\CityTrader\Models\obj\Debug\Models.csproj.CoreCompileInputs.cache

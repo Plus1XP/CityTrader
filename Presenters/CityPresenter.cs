@@ -22,7 +22,7 @@ namespace Presenters
             Update();            
         }
 
-        private void Update()
+        public void Update()
         {
             Menu();
 
@@ -78,27 +78,31 @@ namespace Presenters
             if(!city.Equals(PlayerModel.Instance.LocationName))
             {
                 view.Display($"You have arrived at {city}");
+                PlayerModel.Instance.LocationID = choice;
                 PlayerModel.Instance.LocationName = city;
-                //PlayerModel.Instance.LocationID = choice;
                 PlayerModel.Instance.hasProductPriceUpdated = false;
+                PlayerModel.Instance.isDayOver = true;
                 isChoiceConfirmed = true;
             }
             else
             {
-                view.Display($"You are already at {city}, press any key to continue.");
+                view.Display($"You are already at {city}.");
                 RefreshMenu();
             }
         }
 
         private void RefreshMenu()
         {
-            Console.ReadKey();
-            Console.Clear();
+
+            view.Display("Press any key to continue.");
+            Console.ReadKey();            
             Menu();
         }
 
         private void Menu()
-        {            
+        {
+            Console.Clear();
+
             view.Display(PlayerModel.Instance.DayDetails());
             
             view.Display("Where would you like to travel to? \n");

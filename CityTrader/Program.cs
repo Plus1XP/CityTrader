@@ -12,9 +12,9 @@ namespace CityTrader
         public static void Main(string[] args)
         {
             //CityPresenter presenter = new CityPresenter();
-            ProductPresenter presenter = new ProductPresenter();
-            Console.ReadLine();
-            
+            //ProductPresenter presenter = new ProductPresenter();
+            GamePresenter presenter = new GamePresenter();
+            //Console.ReadLine();            
         }
     }
 }
