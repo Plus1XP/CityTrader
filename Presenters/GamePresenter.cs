@@ -10,7 +10,7 @@ namespace Presenters
 {
     public class GamePresenter
     {
-        private MenuPresenter presenter;
+        private MenuPresenter presenter = new MenuPresenter();
 
         private GameView view = new GameView();
 
@@ -21,40 +21,53 @@ namespace Presenters
 
         private void Update()
         {
-            Mechanics();
+            while (PlayerModel.Instance.Day <= 30 && PlayerModel.Instance.Money >= 0 && !PlayerModel.Instance.hasQuitGame)
+            {
+                GameStart();
+            }
+            GameOver();
         }
 
-        private void Mechanics()
+        private void GameStart()
         {
-            for (; PlayerModel.Instance.Day <= 30; PlayerModel.Instance.Day++)
+            presenter.Update();
+            AddInterest();
+        }
+
+        private void GameOver()
+        {
+            Console.Clear();
+            if (PlayerModel.Instance.Day >= 30)
+            {                
+                view.Display("\nTimes up! \n");
+            }
+            if (PlayerModel.Instance.Money < 0)
             {
-                while (PlayerModel.Instance.Money >= 0 && PlayerModel.Instance.Day <= 30 && PlayerModel.Instance.hasQuitGame == false)
-                {
-                    presenter = new MenuPresenter();
-                    break;
-                }
-                if (PlayerModel.Instance.Day == 30)
-                {
-                    view.Display("\nTimes up! \n");
-                    break;
-                }
-                if (PlayerModel.Instance.Money < 0)
-                {
-                    view.Display("\nYour broke! \n");
-                    break;
-                }
-                if (PlayerModel.Instance.hasQuitGame == true)
-                {
-                    view.Display("\nThanks for playing! \n");
-                    break;
-                }
-                if (PlayerModel.Instance.isDebtPaid == false)
-                {
-                    PlayerModel.Instance.Loan += PlayerModel.Instance.Interest;
-                }
+                view.Display("\nYour broke! \n");
+            }
+            if (PlayerModel.Instance.hasQuitGame)
+            {
+                view.Display("\nThanks for playing! \n");
             }
             view.Display(PlayerModel.Instance.FinalScore());
             Console.ReadKey();
+        }
+        private void AddInterest()
+        {
+            if (!PlayerModel.Instance.isDebtPaid && PlayerModel.Instance.Day <= 30)
+            {
+                PlayerModel.Instance.AddInterest();
+            }
+        }
+        private void LastDayWarning()
+        {
+            if (PlayerModel.Instance.Day == 29)
+            {
+                Console.Clear();
+                view.Display("\nYou have 1 day left, make it count!");
+                view.Display("Press any key to continue");
+                Console.ReadKey();
+            }
         }
     }
 }

@@ -9,17 +9,18 @@ namespace Models
     public class PlayerModel
     {
 
-        public int Day { get; set; } = 1;
+        public int Day { get; set; } = 28;
         public int Money { get; set; } = 1000;
-        public int Loan { get; set; } = 1000;
-        public int Interest { get; set; }
-        public int Score { get; set; }
+        public double Loan { get; set; } = 1000;
+        public double Interest { get; private set; }
+        private const double InterestRate = 0.5;
+        private int Score { get; set; }
         public int LocationID { get; set; } = 3;
         public string LocationName { get; set; } = "Berlin";
         public bool isDebtPaid { get; set; } = false;
         public bool isBuying { get; set; }
         public bool hasQuitGame { get; set; }
-        public bool isDayOver { get; set; }
+        //public bool isDayOver { get; set; }
         public bool hasProductPriceUpdated { get; set; } = false;
 
         private static PlayerModel instance = null;
@@ -39,7 +40,7 @@ namespace Models
 
         private PlayerModel()
         {
-            InterestRate();
+            SetInterestRate();
         }
 
         public string DayDetails()
@@ -48,9 +49,14 @@ namespace Models
             return daydetails;            
         }
 
-        public void InterestRate()
+        public void SetInterestRate()
         {
-            Interest = Loan * 1/2;
+            Interest = Loan * InterestRate;
+        }
+
+        public void AddInterest()
+        {
+            Loan += Interest;
         }
 
         public string PayLoan()
@@ -61,13 +67,13 @@ namespace Models
 
         public void PayLoan(string response)
         {
-            if (response == "y")
+            if (response.Equals("y"))
             {
-                Money -= Loan;
+                Money -= Convert.ToInt32(Loan);
                 Loan = 0;
                 isDebtPaid = true;
             }
-            else if (response == "n")
+            else if (response.Equals("n"))
             {
                 isDebtPaid = false;
             }
@@ -76,7 +82,7 @@ namespace Models
         public string FinalScore()
         {
             string message;
-            Score = Money - Loan;
+            Score = Money - Convert.ToInt32(Loan);
             message = $"Final Score:{Score:C}";
             return message;
         }

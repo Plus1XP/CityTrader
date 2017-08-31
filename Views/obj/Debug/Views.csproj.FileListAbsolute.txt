@@ -3,4 +3,3 @@ D:\OneDrive\Development\Repositories\CityTrader\Views\bin\Debug\Views.pdb
 D:\OneDrive\Development\Repositories\CityTrader\Views\obj\Debug\Views.csprojResolveAssemblyReference.cache
 D:\OneDrive\Development\Repositories\CityTrader\Views\obj\Debug\Views.dll
 D:\OneDrive\Development\Repositories\CityTrader\Views\obj\Debug\Views.pdb
-D:\OneDrive\Development\Repositories\CityTrader\Views\obj\Debug\Views.csproj.CoreCompileInputs.cache

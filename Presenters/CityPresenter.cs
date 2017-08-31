@@ -11,7 +11,7 @@ namespace Presenters
     public class CityPresenter
     {
         private CityModel model = new CityModel();
-        private CityView view = new CityView();
+        private GameView view = new GameView();
 
         private int choice;
 
@@ -19,7 +19,7 @@ namespace Presenters
 
         public CityPresenter()
         {
-            Update();            
+            
         }
 
         public void Update()
@@ -29,7 +29,7 @@ namespace Presenters
             do
             {
                 SelectCity();
-            } while (choice != 0 && isChoiceConfirmed == false);
+            } while (choice != 0 && !isChoiceConfirmed);
         }
 
         private void SelectCity()
@@ -81,7 +81,7 @@ namespace Presenters
                 PlayerModel.Instance.LocationID = choice;
                 PlayerModel.Instance.LocationName = city;
                 PlayerModel.Instance.hasProductPriceUpdated = false;
-                PlayerModel.Instance.isDayOver = true;
+                PlayerModel.Instance.Day++;
                 isChoiceConfirmed = true;
             }
             else

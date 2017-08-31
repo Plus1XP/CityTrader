@@ -10,7 +10,7 @@ namespace Presenters
 {
     public class MenuPresenter
     {
-        private CityPresenter citypresenter;
+        private CityPresenter citypresenter = new CityPresenter();
         private ProductPresenter productpresenter = new ProductPresenter();
 
         private GameView view = new GameView();
@@ -19,7 +19,7 @@ namespace Presenters
 
         public MenuPresenter()
         {
-            Update();
+            
         }
 
         public void Update()
@@ -28,7 +28,7 @@ namespace Presenters
             do
             {
                 SelectAction();
-            } while (choice != 0 && PlayerModel.Instance.isDayOver == false);
+            } while (choice != 0);
         }
 
         public void SelectAction()
@@ -41,7 +41,7 @@ namespace Presenters
                     PlayerModel.Instance.hasQuitGame = true;
                     break;
                 case 1:
-                    citypresenter = new CityPresenter();
+                    citypresenter.Update();
                     RefreshMenu();
                     break;
                 case 2:

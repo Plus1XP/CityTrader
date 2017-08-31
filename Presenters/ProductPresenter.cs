@@ -11,13 +11,13 @@ namespace Presenters
     public class ProductPresenter
     {
         private ProductModel model = new ProductModel();
-        private ProductView view = new ProductView();
+        private GameView view = new GameView();
 
         private int choice;
 
         public ProductPresenter()
         {
-            //Update();
+
         }
 
         public void Update()
@@ -32,9 +32,9 @@ namespace Presenters
 
         public void UpdatePrice()
         {
-            if (PlayerModel.Instance.hasProductPriceUpdated == false)
+            if (!PlayerModel.Instance.hasProductPriceUpdated)
             {
-                foreach (ProductModel product in model.GetAllProducts())
+                foreach (ProductModel product in model.products)
                 {
                     product.UpdatePrice();
                     PlayerModel.Instance.hasProductPriceUpdated = true;
@@ -42,29 +42,14 @@ namespace Presenters
             }
         }
 
-        //private void SelectProduct()
-        //{
-        //    string _choice = Console.ReadLine();
-        //    choice = int.Parse(_choice);
-        //    index = choice;
-        //    switch (choice)
-        //    {
-        //        case 0:
-        //            choice = 0;
-        //            view.Display("Come back soon!");
-        //            break;
-        //        case 1:                    
-        //            VerifyProduct(index);
-        //            break;
-
-        //    }
-
-        //}
-
         private void SelectProduct()
         {
             string _choice = Console.ReadLine();
             choice = int.Parse(_choice);
+            if (choice == 0)
+            {
+                view.Display("Come back soon!");
+            }
             FindProduct(choice);
         }
 
@@ -74,11 +59,11 @@ namespace Presenters
             if (model.products.Exists(p => p.ProductID == _index))
             {
                 ProductModel p = model.products[index];
-                ValidateTransaction(p);
+                ValidateSelection(p);
             }
         }
 
-        private void ValidateTransaction(ProductModel p)
+        private void ValidateSelection(ProductModel p)
         {
             if (PlayerModel.Instance.isBuying)
             {
@@ -218,7 +203,7 @@ namespace Presenters
 
             view.Display("What would you like to purchase? \n");
 
-            foreach(var product in model.GetAllProducts())
+            foreach(ProductModel product in model.GetAllProducts())
             {
                 string StockList = $"{product.ProductID} - {product.ProductName}: {product.Price:C}";
                 string PriceMessage = $"{product.Message}";
