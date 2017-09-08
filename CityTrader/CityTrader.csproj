@@ -42,17 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\CityModel.cs" />
+    <Compile Include="Models\PlayerModel.cs" />
+    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\RNGModel.cs" />
+    <Compile Include="Presenters\CityPresenter.cs" />
+    <Compile Include="Presenters\GamePresenter.cs" />
+    <Compile Include="Presenters\InputPresenter.cs" />
+    <Compile Include="Presenters\MenuPresenter.cs" />
+    <Compile Include="Presenters\ProductPresenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\GameView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Presenters\Presenters.csproj">
-      <Project>{70344c2e-7aa9-4ce9-9a0c-07dd63c6da3f}</Project>
-      <Name>Presenters</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
