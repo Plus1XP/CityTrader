@@ -35,7 +35,7 @@ namespace Presenters
 
         public void SelectAction()
         {
-            input.Response("Please select an activity", 0, 5, "More features to come soon! For now choose from 1-5", null, out choice);
+            input.Response("Please select an activity", 0, 5, "More features to come soon! For now choose from 1-5", null, out choice); //Null or ""
             switch (choice)
             {
                 case 0:

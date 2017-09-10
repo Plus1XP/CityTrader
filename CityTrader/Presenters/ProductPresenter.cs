@@ -91,7 +91,7 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                int maxPurchase = PlayerModel.Instance.money / p.price;
+                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.money / p.price); //Rounding down decimal to int ok?
                 view.Display($"\nYou can afford {maxPurchase} units.");
                 input.Response("\nHow many would you like to purchase?", 0, (maxPurchase), $"You can only afford {maxPurchase} units, choose again.", "Sorry you changed your mind!", out choice);              
                 if (PlayerModel.Instance.money >= (p.price * choice))
@@ -114,6 +114,8 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
+                p.oldPrice = p.price; //Change this to average 
+
                 p.quantity += choice.Value; //Converting int? to int using .Value is this correct??
                 PlayerModel.Instance.money -= (p.price * choice.Value); //Converting int? to int using .Value is this correct??
                 if (choice == 1)
@@ -127,6 +129,11 @@ namespace Presenters
             }
             else
             {
+                int EXPReward = (Convert.ToInt32(p.price) - Convert.ToInt32(p.oldPrice));
+
+                p.ProductExperience = ((p.price - p.oldPrice) * choice.Value);
+                PlayerModel.Instance.GainExperience(p.ProductExperience);
+
                 p.quantity -= choice.Value; //Converting int? to int using .Value is this correct??
                 PlayerModel.Instance.money += (p.price * choice.Value); //Converting int? to int using .Value is this correct??
                 if (choice == 1)
@@ -172,7 +179,7 @@ namespace Presenters
 
             view.Display(PlayerModel.Instance.DayDetails());
 
-            view.Display("What would you like to purchase? \n");
+            view.Display("What would you like to trade? \n");
 
             foreach(ProductModel product in model.GetAllProducts())
             {

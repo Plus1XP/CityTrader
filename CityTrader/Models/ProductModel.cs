@@ -24,6 +24,7 @@ namespace Models
         public int price { get; set; }
         public int oldPrice { get; set; }
         public string message { get; set; }
+        public int ProductExperience { get; set; }
 
         public ProductModel(int id, string name, string nameplural, int lowprice, int highprice)
         {

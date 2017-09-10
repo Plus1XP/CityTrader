@@ -23,6 +23,7 @@ namespace Presenters
         {
             while (PlayerModel.Instance.day <= 30 && PlayerModel.Instance.money >= 0 && !PlayerModel.Instance.hasQuitGame)
             {
+                GameChecks();
                 GameStart();
             }
             GameOver();
@@ -52,7 +53,7 @@ namespace Presenters
             Console.ReadKey();
         }
 
-        private void LastDayWarning()
+        private void GameChecks()
         {
             if (PlayerModel.Instance.day == 29)
             {

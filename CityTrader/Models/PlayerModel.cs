@@ -10,13 +10,17 @@ namespace Models
     {
 
         public int day { get; set; } = 1;
-        public int money { get; set; } = 1000; // Chanage to something bigger
+        public decimal money { get; set; } = 1000;
         public double loan { get; set; } = 1000;
         public double interest { get; private set; }
         private const double interestRate = 0.5;
-        private long score { get; set; }
         public int locationID { get; set; } = 1;
         public string locationName { get; set; } = "London";
+        public int Level { get; set; }
+        public int Experience { get; set; } = 0;
+        public float MaxExperience { get; set; } = 100;
+        private float experienceModifier = 1.5f;
+        private double score { get; set; }
         public bool isDebtPaid { get; set; } = false;
         public bool isBuying { get; set; }
         public bool hasQuitGame { get; set; }
@@ -45,7 +49,7 @@ namespace Models
 
         public string DayDetails()
         {
-            string daydetails = $"Day:{day} | City:{locationName} | Money:{money:C} | Loan:{loan:C} \n";
+            string daydetails = $"Day:{day} | City:{locationName} | Money:{money:C} | Loan:{loan:C} | Level:{Level} EXP:{Experience} MAXEXP:{MaxExperience}\n";
             return daydetails;            
         }
 
@@ -72,7 +76,7 @@ namespace Models
         {
             if (response.Equals("y"))
             {
-                money -= Convert.ToInt32(loan);
+                money -= Convert.ToDecimal(loan);
                 loan = 0;
                 isDebtPaid = true;
             }
@@ -82,10 +86,36 @@ namespace Models
             }
         }
 
+        public void GainExperience(int amount)
+        {
+            Experience += amount;
+            while (Experience >= MaxExperience)
+            {
+                Level++;
+                MaxExperience *= experienceModifier;
+            }
+        }
+
+        //public void GainExperience(int amount)
+        //{
+        //    if ((Experience + amount) >= MaxExperience)
+        //    {
+        //        LevelUp();
+        //    }
+
+        //    Experience += amount;
+        //}
+
+        //private void LevelUp()
+        //{
+        //    Level++;
+        //    MaxExperience *= experienceModifier;
+        //}
+
         public string FinalScore()
         {
             string message;
-            score = money - Convert.ToInt32(loan);
+            score = Convert.ToDouble(money) - loan;
             message = $"\nFinal Score:{score:C}";
             return message;
         }
