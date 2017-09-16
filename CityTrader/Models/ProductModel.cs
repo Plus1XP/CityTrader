@@ -8,31 +8,31 @@ namespace Models
 {
     public class ProductModel
     {
-        public List<ProductModel> products = new List<ProductModel>();
+        public List<ProductModel> Products = new List<ProductModel>();
+
+        public int ProductID { get; set; }
+        public string ProductName { get; set; }
+        public string ProductNamePlural { get; set; }
+        public int Quantity { get; set; }
+        public int LowPrice { get; set; }
+        public int HighPrice {get; set;}
+        public string LowMessage { get; set; }
+        public string HighMessage { get; set; }
+        public int Price { get; set; }
+        public int OldPrice { get; set; }
+        public string Message { get; set; }
+        public long ProductExperience { get; set; }
 
         private int eventRate = 3;
         private int eventChance = 10;
 
-        public int productID { get; set; }
-        public string productName { get; set; }
-        public string productNamePlural { get; set; }
-        public int quantity { get; set; }
-        public int lowPrice { get; set; }
-        public int highPrice {get; set;}
-        public string lowMessage { get; set; }
-        public string highMessage { get; set; }
-        public int price { get; set; }
-        public int oldPrice { get; set; }
-        public string message { get; set; }
-        public int ProductExperience { get; set; }
-
-        public ProductModel(int id, string name, string nameplural, int lowprice, int highprice)
+        public ProductModel(int id, string name, string namePlural, int lowPrice, int highPrice)
         {
-            this.productID = id;
-            this.productName = name;
-            this.productNamePlural = nameplural;
-            this.lowPrice = lowprice;
-            this.highPrice = highprice;
+            this.ProductID = id;
+            this.ProductName = name;
+            this.ProductNamePlural = namePlural;
+            this.LowPrice = lowPrice;
+            this.HighPrice = highPrice;
         }
 
         public ProductModel()
@@ -51,30 +51,30 @@ namespace Models
 
         public void AddProducts(ProductModel product)
         {
-            products.Add(product);
+            Products.Add(product);
         }
 
         public IEnumerable<ProductModel>GetAllProducts()
         {
-            return products;
+            return Products;
         }
 
         public void UpdatePrice()
         {
-            price = RNGModel.RandomPrice.Next(lowPrice, highPrice + 1);
-            message = null;
+            Price = RNGModel.RandomPrice.Next(LowPrice, HighPrice + 1);
+            Message = null;
 
-            int EventChance = RNGModel.RandomPrice.Next(this.eventChance);
+            int eventOutcome = RNGModel.RandomPrice.Next(this.eventChance);
 
-            if (EventChance == 0)
+            if (eventOutcome == 0)
             {
-                price *= eventRate;
-                message = "- Prices are high!";
+                Price *= eventRate;
+                Message = "- Prices are high!";
             }
-            else if (EventChance == 1)
+            else if (eventOutcome == 1)
             {
-                price /= eventRate;
-                message = "- Prices are low!";
+                Price /= eventRate;
+                Message = "- Prices are low!";
             }
         }
     }

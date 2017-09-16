@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Models;
 using Views;
 
@@ -35,7 +36,7 @@ namespace Presenters
         {
             if (!PlayerModel.Instance.hasProductPriceUpdated)
             {
-                foreach (ProductModel product in model.products)
+                foreach (ProductModel product in model.Products)
                 {
                     product.UpdatePrice();
                     PlayerModel.Instance.hasProductPriceUpdated = true;
@@ -49,12 +50,12 @@ namespace Presenters
             FindProduct(choice);
         }
 
-        public void FindProduct(int? _index) //Converting int? to int using .Value is this correct??
+        public void FindProduct(int? _index)
         {
-            int index = model.products.FindIndex(products => products.productID == _index);
-            if (model.products.Exists(p => p.productID == _index))
+            int index = model.Products.FindIndex(products => products.ProductID == _index);
+            if (model.Products.Exists(p => p.ProductID == _index))
             {
-                ProductModel p = model.products[index];
+                ProductModel p = model.Products[index];
                 ValidateSelection(p);
             }
         }
@@ -63,7 +64,7 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                if (p.price <= PlayerModel.Instance.money)
+                if (p.Price <= PlayerModel.Instance.Money)
                 {
                     ProductQuantity(p);
                 }
@@ -75,7 +76,7 @@ namespace Presenters
             }
             else
             {
-                if (p.quantity >= 1)
+                if (p.Quantity >= 1)
                 {
                     ProductQuantity(p);
                 }
@@ -91,19 +92,19 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.money / p.price); //Rounding down decimal to int ok?
+                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price);
                 view.Display($"\nYou can afford {maxPurchase} units.");
                 input.Response("\nHow many would you like to purchase?", 0, (maxPurchase), $"You can only afford {maxPurchase} units, choose again.", "Sorry you changed your mind!", out choice);              
-                if (PlayerModel.Instance.money >= (p.price * choice))
+                if (PlayerModel.Instance.Money >= (p.Price * choice))
                 {
                     TransactionComplete(p);
                 }
             }
             else
             {
-                view.Display($"\nYou can sell {p.quantity} units.");
-                input.Response("\nHow many would you like to sell?", 0, (p.quantity), $"You can only sell {p.quantity} units, choose again.", "Sorry you changed your mind!", out choice);
-                if (choice <= p.quantity)
+                view.Display($"\nYou can sell {p.Quantity} units.");
+                input.Response("\nHow many would you like to sell?", 0, (p.Quantity), $"You can only sell {p.Quantity} units, choose again.", "Sorry you changed your mind!", out choice);
+                if (choice <= p.Quantity)
                 {
                     TransactionComplete(p);
                 }
@@ -114,39 +115,37 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                p.oldPrice = p.price; //Change this to average 
+                p.OldPrice = p.Price; //Change this to average 
 
-                p.quantity += choice.Value; //Converting int? to int using .Value is this correct??
-                PlayerModel.Instance.money -= (p.price * choice.Value); //Converting int? to int using .Value is this correct??
+                p.Quantity += choice.Value;
+                PlayerModel.Instance.Money -= (p.Price * choice.Value);
                 if (choice == 1)
                 {
-                    view.Display($"A {p.productName} has been added to your inventory!");
+                    view.Display($"A {p.ProductName} has been added to your inventory!");
                 }
                 else
                 {
-                    view.Display($"{choice} {p.productNamePlural} has been added to your inventory!");                    
+                    view.Display($"{choice} {p.ProductNamePlural} has been added to your inventory!");                    
                 }
             }
             else
             {
-                int EXPReward = (Convert.ToInt32(p.price) - Convert.ToInt32(p.oldPrice));
-
-                p.ProductExperience = ((p.price - p.oldPrice) * choice.Value);
+                p.ProductExperience = PlayerModel.Instance.ExperienceReward(p.Price, p.OldPrice, choice.Value);
                 PlayerModel.Instance.GainExperience(p.ProductExperience);
 
-                p.quantity -= choice.Value; //Converting int? to int using .Value is this correct??
-                PlayerModel.Instance.money += (p.price * choice.Value); //Converting int? to int using .Value is this correct??
+                p.Quantity -= choice.Value;
+                PlayerModel.Instance.Money += ((decimal)p.Price * (decimal)choice.Value);                
                 if (choice == 1)
                 {
-                    view.Display($"A {p.productName} has been sold!");
+                    view.Display($"A {p.ProductName} has been sold!");
                 }
                 else
                 {
-                    view.Display($"{choice} {p.productNamePlural} has been sold!");
+                    view.Display($"{choice} {p.ProductNamePlural} has been sold!");
                 }
             }
             view.Display("Press any key to continue.");
-            choice = null; //Converting int? to int using .Value is this correct??
+            choice = null;
             RefreshMenu();
         }
 
@@ -160,7 +159,7 @@ namespace Presenters
 
             foreach (var product in model.GetAllProducts())
             {
-                view.Display($"{product.productID} - {product.productName}: {product.quantity}");
+                view.Display($"{product.ProductID} - {product.ProductName}: {product.Quantity}");
             }
 
             view.Display("\n0 - Exit!\n");
@@ -169,8 +168,8 @@ namespace Presenters
         private void RefreshMenu()
         {
             Console.ReadKey();
-            Console.Clear();
-            Menu();
+            Console.Clear(); //delete?
+            Update();
         }
 
         private void Menu()
@@ -183,15 +182,13 @@ namespace Presenters
 
             foreach(ProductModel product in model.GetAllProducts())
             {
-                string StockList = $"{product.productID} - {product.productName}: {product.price:C}";
-                string PriceMessage = $"{product.message}";
-                string Inventory = $"| Inventory: {product.quantity}";
+                string StockList = $"{product.ProductID} - {product.ProductName}: {product.Price:C}";
+                string PriceMessage = $"{product.Message}";
+                string Inventory = $"| Inventory: {product.Quantity}";
                 view.Display($"{StockList,-40} {PriceMessage,-25} {Inventory,20}");
             }
 
             view.Display("\n0 - Cancel Transaction! \n");
-
-            //view.Display("\nPlease select a Product");
         }
     }
 }

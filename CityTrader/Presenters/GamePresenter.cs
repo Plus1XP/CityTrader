@@ -21,7 +21,7 @@ namespace Presenters
 
         private void Update()
         {
-            while (PlayerModel.Instance.day <= 30 && PlayerModel.Instance.money >= 0 && !PlayerModel.Instance.hasQuitGame)
+            while (PlayerModel.Instance.Day <= 30 && PlayerModel.Instance.Money >= 0 && !PlayerModel.Instance.hasQuitGame)
             {
                 GameChecks();
                 GameStart();
@@ -37,11 +37,11 @@ namespace Presenters
         private void GameOver()
         {
             Console.Clear();
-            if (PlayerModel.Instance.day >= 30)
+            if (PlayerModel.Instance.Day >= 30)
             {                
                 view.Display("\nTimes up! \n");
             }
-            if (PlayerModel.Instance.money < 0)
+            if (PlayerModel.Instance.Money < 0)
             {
                 view.Display("\nYour broke! \n");
             }
@@ -55,7 +55,7 @@ namespace Presenters
 
         private void GameChecks()
         {
-            if (PlayerModel.Instance.day == 29)
+            if (PlayerModel.Instance.Day == 29)
             {
                 Console.Clear();
                 view.Display("\nYou have 1 day left, make it count!");

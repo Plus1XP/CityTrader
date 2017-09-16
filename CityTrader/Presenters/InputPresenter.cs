@@ -14,7 +14,7 @@ namespace Presenters
 
         public void Response(string prompt, int low, int high, string warning, string message, out int? choice)
         {
-            choice = null; //Is a null ok??
+            choice = null;
             try
             {
                 do

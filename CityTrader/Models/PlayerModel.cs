@@ -8,24 +8,24 @@ namespace Models
 {
     public class PlayerModel
     {
-
-        public int day { get; set; } = 1;
-        public decimal money { get; set; } = 1000;
-        public double loan { get; set; } = 1000;
-        public double interest { get; private set; }
-        private const double interestRate = 0.5;
-        public int locationID { get; set; } = 1;
-        public string locationName { get; set; } = "London";
-        public int Level { get; set; }
-        public int Experience { get; set; } = 0;
-        public float MaxExperience { get; set; } = 100;
-        private float experienceModifier = 1.5f;
-        private double score { get; set; }
+        public int Day { get; set; } = 1;
+        public decimal Money { get; set; } = 576;
+        public int LocationID { get; set; } = 1;
+        public string LocationName { get; set; } = "London";
         public bool isDebtPaid { get; set; } = false;
         public bool isBuying { get; set; }
         public bool hasQuitGame { get; set; }
         public bool isDayOver { get; set; }
         public bool hasProductPriceUpdated { get; set; } = false;
+
+        private float loan = 1000;
+        private float interest;
+        private const float interestRate = 0.5f;
+        private int level = 1;
+        private float experience = 0;
+        private float maxExperience = 100;
+        private float experienceModifier = 1.5f;
+        private decimal score;
 
         private static PlayerModel instance = null;
 
@@ -45,12 +45,14 @@ namespace Models
         private PlayerModel()
         {
             SetInterestRate();
+            EventManager.Instance.OnExperiencedGained += GainExperience;
+
         }
 
         public string DayDetails()
         {
-            string daydetails = $"Day:{day} | City:{locationName} | Money:{money:C} | Loan:{loan:C} | Level:{Level} EXP:{Experience} MAXEXP:{MaxExperience}\n";
-            return daydetails;            
+            string daydetails = $"Day:{Day} | City:{LocationName} | Money:{Money:C} | Loan:{loan:C} | Level:{level} EXP:{experience} MAXEXP:{maxExperience}\n";
+            return daydetails;
         }
 
         public void SetInterestRate()
@@ -60,10 +62,10 @@ namespace Models
 
         public void AddInterest()
         {
-            if (!PlayerModel.Instance.isDebtPaid && PlayerModel.Instance.day < 30)
+            if (!PlayerModel.Instance.isDebtPaid && PlayerModel.Instance.Day < 30)
             {
                 loan += interest;
-            }            
+            }
         }
 
         public string PayLoan()
@@ -76,7 +78,7 @@ namespace Models
         {
             if (response.Equals("y"))
             {
-                money -= Convert.ToDecimal(loan);
+                Money -= (decimal)loan;
                 loan = 0;
                 isDebtPaid = true;
             }
@@ -86,36 +88,47 @@ namespace Models
             }
         }
 
-        public void GainExperience(int amount)
+        public void GainExperience(long amount)
         {
-            Experience += amount;
-            while (Experience >= MaxExperience)
+            experience += amount;
+            while (experience >= maxExperience)
             {
-                Level++;
-                MaxExperience *= experienceModifier;
+                LevelUp();               
             }
         }
 
-        //public void GainExperience(int amount)
+        //public void GainExperience(long amount)
         //{
-        //    if ((Experience + amount) >= MaxExperience)
+        //    if ((experience + amount) >= maxExperience)
         //    {
         //        LevelUp();
         //    }
 
-        //    Experience += amount;
+        //    experience += amount;
         //}
 
-        //private void LevelUp()
-        //{
-        //    Level++;
-        //    MaxExperience *= experienceModifier;
-        //}
+        private void LevelUp()
+        {
+            level++;
+            maxExperience *= (experienceModifier * level);
+            Console.WriteLine("You have gain a level, you are now level {0}", level);
+        }
+
+        public long ExperienceReward(int currentPrice, int oldPrice, int quantity)
+        {            
+            long productEXP = ((currentPrice - oldPrice) * quantity / 100 / level); //divide exp by level so higher level less exp when more trades are made
+            return productEXP;
+        }
+
+        public override string ToString()
+        {
+            return $"You are current level {level} and you are {experience} / {maxExperience}";
+        }
 
         public string FinalScore()
         {
             string message;
-            score = Convert.ToDouble(money) - loan;
+            score = Money - (decimal)loan;
             message = $"\nFinal Score:{score:C}";
             return message;
         }

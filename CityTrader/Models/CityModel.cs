@@ -4,7 +4,7 @@ namespace Models
 {
     public class CityModel
     {
-        public List<CityModel> cities = new List<CityModel>();
+        public List<CityModel> Cities = new List<CityModel>();
 
         public int CityID { get; set; }
         public string CityName { get; set; }
@@ -31,12 +31,12 @@ namespace Models
 
         public void AddCity(CityModel City)
         {
-            cities.Add(City);
+            Cities.Add(City);
         }
 
         public IEnumerable<CityModel> GetAllCities()
         {
-            return cities;
+            return Cities;
         }
     }
 }
