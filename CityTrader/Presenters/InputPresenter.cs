@@ -12,15 +12,27 @@ namespace Presenters
     {
         private GameView view = new GameView();
 
-        public void Response(string prompt, int low, int high, string warning, string message, out int? choice)
-        {
+        private bool hasOptionToTradeAll;
+
+        public void Response(string prompt, int? maxQuantity, int low, int high, string warning, string message, out int? choice)
+        {          
             choice = null;
             try
             {
                 do
                 {
                     view.Display(prompt);
-                    choice = int.Parse(Console.ReadLine());
+                    //choice = int.Parse(Console.ReadLine());
+                    //string userChoice = Console.ReadLine().ToLower();
+                    //if (userChoice.Equals("a") || userChoice.Equals("all"))
+                    //{
+                    //    choice = maxQuantity;
+                    //}
+                    //else
+                    //{
+                    //    choice = int.Parse(userChoice);
+                    //}
+                    MaxQuantity(choice, maxQuantity, out choice);
                     RangeViolation(choice, low, high, warning);
                     Message(choice, message);
                 } while ((choice < low) || (choice > high));
@@ -28,15 +40,32 @@ namespace Presenters
             catch
             {
                 view.Display("Thats not a number! Try again.");
-                Response(prompt, low, high, warning, message, out choice);
+                Response(prompt, maxQuantity, low, high, warning, message, out choice);
             }
         }
 
-        public void Message(int? choice, string message)
+        public void LimitedUserInput(int? choice, int? maxQuantity)
         {
-            if (choice == 0)
+            if(hasOptionToTradeAll)
             {
-                view.Display(message);
+                MaxQuantity(choice, maxQuantity, out choice);
+            }
+            else
+            {
+                choice = int.Parse(Console.ReadLine());
+            }
+        }
+
+        public void MaxQuantity(int ? choice, int ? maxQuantity, out int? choice1)
+        {
+            string userChoice = Console.ReadLine().ToLower();
+            if (userChoice.Equals("a") || userChoice.Equals("all"))
+            {
+                choice1 = maxQuantity;
+            }
+            else
+            {
+                choice1 = int.Parse(userChoice);
             }
         }
 
@@ -45,6 +74,14 @@ namespace Presenters
             if ((choice < low) || (choice > high))
             {
                 view.Display(warning);
+            }
+        }
+
+        public void Message(int? choice, string message)
+        {
+            if (choice == 0)
+            {
+                view.Display(message);
             }
         }
     }

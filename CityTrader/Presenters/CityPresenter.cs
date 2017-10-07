@@ -35,7 +35,7 @@ namespace Presenters
 
         private void SelectCity()
         {
-            input.Response("Please select a city", 0, 8, "We only fly to cities 1-8, choose again.", "Welcome Back!", out choice);
+            input.Response("Please select a city", null, 0, 8, "We only fly to cities 1-8, choose again.", "Welcome Back!", out choice);
             switch(choice)
             {
                 //case 0:

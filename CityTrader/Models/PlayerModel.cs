@@ -9,7 +9,7 @@ namespace Models
     public class PlayerModel
     {
         public int Day { get; set; } = 1;
-        public decimal Money { get; set; } = 576;
+        public decimal Money { get; set; } = 1000;
         public int LocationID { get; set; } = 1;
         public string LocationName { get; set; } = "London";
         public bool isDebtPaid { get; set; } = false;
@@ -22,8 +22,8 @@ namespace Models
         private float interest;
         private const float interestRate = 0.5f;
         private int level = 1;
-        private float experience = 0;
-        private float maxExperience = 100;
+        private double experience = 0;
+        private double maxExperience = 100;
         private float experienceModifier = 1.5f;
         private decimal score;
 
@@ -70,19 +70,19 @@ namespace Models
 
         public string PayLoan()
         {
-            string message = $"Your loan totals:{loan:C} Would you like yo pay now? (y) or (n)";
+            string message = $"Your loan totals:{loan:C} Would you like yo pay now? (y)es or (n)o";
             return message;
         }
 
         public void PayLoan(string response)
         {
-            if (response.Equals("y"))
+            if (response.Equals("y") || response.Equals("yes"))
             {
                 Money -= (decimal)loan;
                 loan = 0;
                 isDebtPaid = true;
             }
-            else if (response.Equals("n"))
+            else if (response.Equals("n") || response.Equals("no"))
             {
                 isDebtPaid = false;
             }
@@ -116,7 +116,7 @@ namespace Models
 
         public long ExperienceReward(int currentPrice, int oldPrice, int quantity)
         {            
-            long productEXP = ((currentPrice - oldPrice) * quantity / 100 / level); //divide exp by level so higher level less exp when more trades are made
+            long productEXP = ((currentPrice - oldPrice) * (long)quantity / 100 / level); //divide exp by level so higher level less exp when more trades are made & testing long cast to stop exp overflow
             return productEXP;
         }
 

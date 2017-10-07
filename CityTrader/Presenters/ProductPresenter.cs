@@ -46,7 +46,7 @@ namespace Presenters
 
         private void SelectProduct()
         {
-            input.Response("Please select a Product", 0, 10, "We only stock products 1-10, choose again.", "Come back soon!", out choice);
+            input.Response("Please select a Product", null, 0, 10, "We only stock products 1-10, choose again.", "Come back soon!", out choice);
             FindProduct(choice);
         }
 
@@ -92,9 +92,9 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price);
+                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price); //Convert to long as game will crash if quantity is to large!
                 view.Display($"\nYou can afford {maxPurchase} units.");
-                input.Response("\nHow many would you like to purchase?", 0, (maxPurchase), $"You can only afford {maxPurchase} units, choose again.", "Sorry you changed your mind!", out choice);              
+                input.Response("\nHow many would you like to purchase? \nEnter a value or Buy (a)ll available.", maxPurchase, 0, (maxPurchase), $"You can only afford {maxPurchase} units, choose again.", "Sorry you changed your mind!", out choice);              
                 if (PlayerModel.Instance.Money >= (p.Price * choice))
                 {
                     TransactionComplete(p);
@@ -103,7 +103,7 @@ namespace Presenters
             else
             {
                 view.Display($"\nYou can sell {p.Quantity} units.");
-                input.Response("\nHow many would you like to sell?", 0, (p.Quantity), $"You can only sell {p.Quantity} units, choose again.", "Sorry you changed your mind!", out choice);
+                input.Response("\nHow many would you like to sell? \nEnter a value or Sell (a)ll available.", p.Quantity, 0, (p.Quantity), $"You can only sell {p.Quantity} units, choose again.", "Sorry you changed your mind!", out choice);
                 if (choice <= p.Quantity)
                 {
                     TransactionComplete(p);
