@@ -10,6 +10,7 @@ namespace Models
     {
         public int Day { get; set; } = 1;
         public decimal Money { get; set; } = 1000;
+        public int Level = 1;
         public int LocationID { get; set; } = 1;
         public string LocationName { get; set; } = "London";
         public bool isDebtPaid { get; set; } = false;
@@ -21,7 +22,6 @@ namespace Models
         private float loan = 1000;
         private float interest;
         private const float interestRate = 0.5f;
-        private int level = 1;
         private double experience = 0;
         private double maxExperience = 100;
         private float experienceModifier = 1.5f;
@@ -51,7 +51,8 @@ namespace Models
 
         public string DayDetails()
         {
-            string daydetails = $"Day:{Day} | City:{LocationName} | Money:{Money:C} | Loan:{loan:C} | Level:{level} EXP:{experience} MAXEXP:{maxExperience}\n";
+            //Add eventChance information to test outcome vs. level.
+            string daydetails = $"Day:{Day} | City:{LocationName} | Money:{Money:C} | Loan:{loan:C} | Level:{Level} EXP:{experience} MAXEXP:{maxExperience}\n";
             return daydetails;
         }
 
@@ -97,32 +98,23 @@ namespace Models
             }
         }
 
-        //public void GainExperience(long amount)
-        //{
-        //    if ((experience + amount) >= maxExperience)
-        //    {
-        //        LevelUp();
-        //    }
-
-        //    experience += amount;
-        //}
-
         private void LevelUp()
         {
-            level++;
-            maxExperience *= (experienceModifier * level);
-            Console.WriteLine("You have gain a level, you are now level {0}", level);
+            Level++;
+            maxExperience *= (experienceModifier * Level);
+            Console.WriteLine("You have gain a level, you are now level {0}", Level);
         }
 
         public long ExperienceReward(int currentPrice, int oldPrice, int quantity)
-        {            
-            long productEXP = ((currentPrice - oldPrice) * (long)quantity / 100 / level); //divide exp by level so higher level less exp when more trades are made & testing long cast to stop exp overflow
+        {
+            //Dividing the Exp by 100 for more managable numbers. Also dividing by level to control over leveling. Also testing a long cast to prevent overflow exceptions.
+            long productEXP = ((currentPrice - oldPrice) * (long)quantity / 100 / Level);
             return productEXP;
         }
 
         public override string ToString()
         {
-            return $"You are current level {level} and you are {experience} / {maxExperience}";
+            return $"You are current level {Level} and you are {experience} / {maxExperience}";
         }
 
         public string FinalScore()

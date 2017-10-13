@@ -92,9 +92,12 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price); //Convert to long as game will crash if quantity is to large!
-                view.Display($"\nYou can afford {maxPurchase} units.");
-                input.Response("\nHow many would you like to purchase? \nEnter a value or Buy (a)ll available.", maxPurchase, 0, (maxPurchase), $"You can only afford {maxPurchase} units, choose again.", "Sorry you changed your mind!", out choice);              
+                //Use a larger DataType to prevent an overflow exception, if the player has a large amount of money and can purchase large amounts.                
+                int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price);
+                int currentStorage = p.MaxQuantity - p.Quantity;
+                int purchaseLimit = Math.Min(currentStorage, maxPurchase);
+                view.Display($"\nYou can purchase {purchaseLimit} units.");
+                input.Response("\nHow many would you like to purchase? \nEnter a value or Buy (a)ll available.", purchaseLimit, 0, (purchaseLimit), $"You can only purchase {purchaseLimit} units, choose again.", "Sorry you changed your mind!", out choice);              
                 if (PlayerModel.Instance.Money >= (p.Price * choice))
                 {
                     TransactionComplete(p);
@@ -115,8 +118,8 @@ namespace Presenters
         {
             if (PlayerModel.Instance.isBuying)
             {
-                p.OldPrice = p.Price; //Change this to average 
-
+                //Add method to calculate the average price to display potential profits.
+                p.OldPrice = p.Price;
                 p.Quantity += choice.Value;
                 PlayerModel.Instance.Money -= (p.Price * choice.Value);
                 if (choice == 1)
@@ -168,7 +171,7 @@ namespace Presenters
         private void RefreshMenu()
         {
             Console.ReadKey();
-            Console.Clear(); //delete?
+            //Console.Clear(); //delete?
             Update();
         }
 

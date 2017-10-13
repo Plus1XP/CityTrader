@@ -12,8 +12,6 @@ namespace Presenters
     {
         private GameView view = new GameView();
 
-        private bool hasOptionToTradeAll;
-
         public void Response(string prompt, int? maxQuantity, int low, int high, string warning, string message, out int? choice)
         {          
             choice = null;
@@ -22,17 +20,7 @@ namespace Presenters
                 do
                 {
                     view.Display(prompt);
-                    //choice = int.Parse(Console.ReadLine());
-                    //string userChoice = Console.ReadLine().ToLower();
-                    //if (userChoice.Equals("a") || userChoice.Equals("all"))
-                    //{
-                    //    choice = maxQuantity;
-                    //}
-                    //else
-                    //{
-                    //    choice = int.Parse(userChoice);
-                    //}
-                    MaxQuantity(choice, maxQuantity, out choice);
+                    AdaptiveUserInput(choice, maxQuantity, out choice);
                     RangeViolation(choice, low, high, warning);
                     Message(choice, message);
                 } while ((choice < low) || (choice > high));
@@ -44,28 +32,16 @@ namespace Presenters
             }
         }
 
-        public void LimitedUserInput(int? choice, int? maxQuantity)
-        {
-            if(hasOptionToTradeAll)
-            {
-                MaxQuantity(choice, maxQuantity, out choice);
-            }
-            else
-            {
-                choice = int.Parse(Console.ReadLine());
-            }
-        }
-
-        public void MaxQuantity(int ? choice, int ? maxQuantity, out int? choice1)
+        public void AdaptiveUserInput(int? choice, int? maxQuantity, out int? adaptiveChoice)
         {
             string userChoice = Console.ReadLine().ToLower();
             if (userChoice.Equals("a") || userChoice.Equals("all"))
             {
-                choice1 = maxQuantity;
+                adaptiveChoice = maxQuantity;
             }
             else
             {
-                choice1 = int.Parse(userChoice);
+                adaptiveChoice = int.Parse(userChoice);
             }
         }
 

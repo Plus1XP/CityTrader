@@ -14,6 +14,7 @@ namespace Models
         public string ProductName { get; set; }
         public string ProductNamePlural { get; set; }
         public int Quantity { get; set; }
+        public int MaxQuantity { get; set; } = 1000;
         public int LowPrice { get; set; }
         public int HighPrice {get; set;}
         public string LowMessage { get; set; }
@@ -24,7 +25,7 @@ namespace Models
         public long ProductExperience { get; set; }
 
         private int eventRate = 3;
-        private int eventChance = 10;
+        private int eventChance = 10 + 1;
 
         public ProductModel(int id, string name, string namePlural, int lowPrice, int highPrice)
         {
