@@ -11,6 +11,7 @@ namespace Models
         public int Day { get; set; } = 1;
         public decimal Money { get; set; } = 1000;
         public int Level = 1;
+        public int MaxStorage { get; set; } = 1000;
         public int LocationID { get; set; } = 1;
         public string LocationName { get; set; } = "London";
         public bool isDebtPaid { get; set; } = false;
@@ -19,6 +20,7 @@ namespace Models
         public bool isDayOver { get; set; }
         public bool hasProductPriceUpdated { get; set; } = false;
 
+        private int InitialStorage;
         private float loan = 1000;
         private float interest;
         private const float interestRate = 0.5f;
@@ -26,6 +28,9 @@ namespace Models
         private double maxExperience = 100;
         private float experienceModifier = 1.5f;
         private decimal score;
+
+        //For hidden value
+        public int eventChanceResults { get; set; }
 
         private static PlayerModel instance = null;
 
@@ -45,15 +50,16 @@ namespace Models
         private PlayerModel()
         {
             SetInterestRate();
+            SetStorage();
             EventManager.Instance.OnExperiencedGained += GainExperience;
 
         }
 
         public string DayDetails()
         {
-            //Add eventChance information to test outcome vs. level.
-            string daydetails = $"Day:{Day} | City:{LocationName} | Money:{Money:C} | Loan:{loan:C} | Level:{Level} EXP:{experience} MAXEXP:{maxExperience}\n";
-            return daydetails;
+            string dayDetails = $"Day:{Day} | City:{LocationName} | Money:{Money:C} | Loan:{loan:C} | Level:{Level} \n";
+            string hiddenValues = $"Hidden Values - EXP:{experience} | MAXEXP:{maxExperience} | EventChance: {eventChanceResults} \n";
+            return dayDetails + hiddenValues;
         }
 
         public void SetInterestRate()
@@ -98,11 +104,13 @@ namespace Models
             }
         }
 
-        private void LevelUp()
+        private string LevelUp()
         {
             Level++;
             maxExperience *= (experienceModifier * Level);
-            Console.WriteLine("You have gain a level, you are now level {0}", Level);
+            //Message not displayed since changing from Console.WriteLine to Return.
+            string message = $"You have gain a level, you are now level {Level}";
+            return message;
         }
 
         public long ExperienceReward(int currentPrice, int oldPrice, int quantity)
@@ -112,6 +120,18 @@ namespace Models
             return productEXP;
         }
 
+        public void SetStorage()
+        {
+            InitialStorage = MaxStorage;
+        }
+
+        public void SetMaxStorage()
+        {            
+            MaxStorage = Level * InitialStorage;
+            //string message = $"Your storage has increased!";
+            //return message;
+        }
+
         public override string ToString()
         {
             return $"You are current level {Level} and you are {experience} / {maxExperience}";
@@ -119,10 +139,23 @@ namespace Models
 
         public string FinalScore()
         {
-            string message;
             score = Money - (decimal)loan;
-            message = $"\nFinal Score:{score:C}";
+            string message = $"\nFinal Score:{score:C}";
             return message;
         }
+
+        //For hidden value.
+        public int EventResults(int eventChance)
+        {
+            eventChanceResults = eventChance;
+            return eventChanceResults;
+        }
+
+        //public int SetEventChance(int eventRate, int minimumEventChance)
+        //{
+        //    int eventChance;
+        //    int playerLevelEventRate = (eventRate + 1) - Level;
+        //    return eventChance = Math.Max(minimumEventChance, playerLevelEventRate);
+        //}
     }
 }

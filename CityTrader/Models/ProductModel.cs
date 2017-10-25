@@ -14,7 +14,7 @@ namespace Models
         public string ProductName { get; set; }
         public string ProductNamePlural { get; set; }
         public int Quantity { get; set; }
-        public int MaxQuantity { get; set; } = 1000;
+        //public int MaxQuantity { get; set; } = 1000;
         public int LowPrice { get; set; }
         public int HighPrice {get; set;}
         public string LowMessage { get; set; }
@@ -24,8 +24,9 @@ namespace Models
         public string Message { get; set; }
         public long ProductExperience { get; set; }
 
-        private int eventRate = 3;
-        private int eventChance = 10 + 1;
+        private int eventMultiplier = 3;
+        private int eventRate = 10;
+        private int minimumEventChance = 4;
 
         public ProductModel(int id, string name, string namePlural, int lowPrice, int highPrice)
         {
@@ -60,21 +61,31 @@ namespace Models
             return Products;
         }
 
-        public void UpdatePrice()
+        public int SetEventChance()
         {
+            int eventChance;
+            int playerLevelEventRate = (this.eventRate + 1) - PlayerModel.Instance.Level;
+            return eventChance = Math.Max(minimumEventChance, playerLevelEventRate);
+        }
+
+        public void UpdatePrice()
+        {            
             Price = RNGModel.RandomPrice.Next(LowPrice, HighPrice + 1);
             Message = null;
 
-            int eventOutcome = RNGModel.RandomPrice.Next(this.eventChance);
+            int eventChance = SetEventChance();
+            int eventOutcome = RNGModel.RandomPrice.Next(eventChance);
+            //For hidden value.
+            PlayerModel.Instance.EventResults(eventChance);
 
             if (eventOutcome == 0)
             {
-                Price *= eventRate;
+                Price *= eventMultiplier;
                 Message = "- Prices are high!";
             }
             else if (eventOutcome == 1)
             {
-                Price /= eventRate;
+                Price /= eventMultiplier;
                 Message = "- Prices are low!";
             }
         }

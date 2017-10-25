@@ -94,7 +94,7 @@ namespace Presenters
             {
                 //Use a larger DataType to prevent an overflow exception, if the player has a large amount of money and can purchase large amounts.                
                 int maxPurchase = (int)Math.Floor(PlayerModel.Instance.Money / p.Price);
-                int currentStorage = p.MaxQuantity - p.Quantity;
+                int currentStorage = PlayerModel.Instance.MaxStorage - p.Quantity;
                 int purchaseLimit = Math.Min(currentStorage, maxPurchase);
                 view.Display($"\nYou can purchase {purchaseLimit} units.");
                 input.Response("\nHow many would you like to purchase? \nEnter a value or Buy (a)ll available.", purchaseLimit, 0, (purchaseLimit), $"You can only purchase {purchaseLimit} units, choose again.", "Sorry you changed your mind!", out choice);              
@@ -135,6 +135,7 @@ namespace Presenters
             {
                 p.ProductExperience = PlayerModel.Instance.ExperienceReward(p.Price, p.OldPrice, choice.Value);
                 PlayerModel.Instance.GainExperience(p.ProductExperience);
+                PlayerModel.Instance.SetMaxStorage();
 
                 p.Quantity -= choice.Value;
                 PlayerModel.Instance.Money += ((decimal)p.Price * (decimal)choice.Value);                
@@ -187,7 +188,7 @@ namespace Presenters
             {
                 string StockList = $"{product.ProductID} - {product.ProductName}: {product.Price:C}";
                 string PriceMessage = $"{product.Message}";
-                string Inventory = $"| Inventory: {product.Quantity}";
+                string Inventory = $"| Inventory: {product.Quantity} / {PlayerModel.Instance.MaxStorage}";
                 view.Display($"{StockList,-40} {PriceMessage,-25} {Inventory,20}");
             }
 

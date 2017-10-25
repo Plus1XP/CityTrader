@@ -55,7 +55,6 @@ namespace Presenters
 
         private void GameChecks()
         {
-            //Add player level checks to increase storage depending on level.
             if (PlayerModel.Instance.Day == 29)
             {
                 Console.Clear();
