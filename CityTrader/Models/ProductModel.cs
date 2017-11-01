@@ -64,7 +64,7 @@ namespace Models
         public int SetEventChance()
         {
             int eventChance;
-            int playerLevelEventRate = (this.eventRate + 1) - PlayerModel.Instance.Level;
+            int playerLevelEventRate = (this.eventRate + 1) - PlayerModel.Instance.CurrentLevel;
             return eventChance = Math.Max(minimumEventChance, playerLevelEventRate);
         }
 

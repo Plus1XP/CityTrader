@@ -14,13 +14,15 @@ namespace Presenters
         private ProductPresenter productpresenter = new ProductPresenter();
         private InputPresenter input = new InputPresenter();
 
+        private DebuggingPresenter debugging = new DebuggingPresenter();
+
         private GameView view = new GameView();
 
         private int? choice;
 
         public MenuPresenter()
         {
-            
+
         }
 
         public void Update()
@@ -35,7 +37,7 @@ namespace Presenters
 
         public void SelectAction()
         {
-            input.Response("Please select an activity", null, 0, 5, "More features to come soon! For now choose from 1-5", null, out choice); //Null or ""
+            input.Response("Please select an activity", null, 0, 6, "More features to come soon! For now choose from 1-5", null, out choice);
             switch (choice)
             {
                 case 0:
@@ -61,6 +63,11 @@ namespace Presenters
                     break;
                 case 5:
                     PayLoan();
+                    RefreshMenu();
+                    break;
+                case 6:
+                    //If disabled remove option 6 from input.response
+                    debugging.Update();
                     RefreshMenu();
                     break;
             }
@@ -95,6 +102,7 @@ namespace Presenters
             view.Display("3 - Sell merchandise");
             view.Display("4 - View inventory");
             view.Display("5 - Repay loan \n");
+            view.Display("6 - Debugging Tools \n");
 
             view.Display("0 - Quit \n");
         }

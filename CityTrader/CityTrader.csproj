@@ -43,11 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CityModel.cs" />
+    <Compile Include="Models\DebuggingModel.cs" />
     <Compile Include="Models\EventManager.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\RNGModel.cs" />
     <Compile Include="Presenters\CityPresenter.cs" />
+    <Compile Include="Presenters\DebuggingPresenter.cs" />
     <Compile Include="Presenters\GamePresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\MenuPresenter.cs" />

@@ -38,10 +38,6 @@ namespace Presenters
             input.Response("Please select a city", null, 0, 8, "We only fly to cities 1-8, choose again.", "Welcome Back!", out choice);
             switch(choice)
             {
-                //case 0:
-                //    choice = 0;
-                //    view.Display("Welcome back!");
-                //    break;
                 case 1:
                     TravelToCity("London");
                     break;
@@ -66,10 +62,6 @@ namespace Presenters
                 case 8:
                     TravelToCity("Hong Kong");
                     break;
-                //default:
-                //    view.Display("\nYou have entered an incorrect choice, press any key to continue.");
-                //    RefreshMenu();
-                //    break;
             }
         }
 
