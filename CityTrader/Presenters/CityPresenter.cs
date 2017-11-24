@@ -11,9 +11,10 @@ namespace Presenters
 {
     public class CityPresenter
     {
-        private CityModel model = new CityModel();
-        private GameView view = new GameView();
         private InputPresenter input = new InputPresenter();
+        private GameView view = new GameView();
+
+        private CityModel model = new CityModel();
 
         private int? choice;
 

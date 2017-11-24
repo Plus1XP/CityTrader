@@ -10,9 +10,9 @@ namespace Presenters
 {
     public class GamePresenter
     {
-        private MenuPresenter presenter = new MenuPresenter();
-
         private GameView view = new GameView();
+
+        private MenuPresenter presenter = new MenuPresenter();        
 
         public GamePresenter()
         {

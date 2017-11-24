@@ -45,6 +45,7 @@
     <Compile Include="Models\CityModel.cs" />
     <Compile Include="Models\DebuggingModel.cs" />
     <Compile Include="Models\EventManager.cs" />
+    <Compile Include="Models\NPCModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\RNGModel.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Presenters\GamePresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\MenuPresenter.cs" />
+    <Compile Include="Presenters\NPCPresenter.cs" />
     <Compile Include="Presenters\ProductPresenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

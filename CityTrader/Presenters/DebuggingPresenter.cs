@@ -15,6 +15,7 @@ namespace Presenters
 
         private DebuggingModel debuggingmodel = new DebuggingModel();
         private ProductPresenter productpresenter = new ProductPresenter();
+        private NPCPresenter npcpresenter = new NPCPresenter();
 
         private int? choice;
 
@@ -76,12 +77,33 @@ namespace Presenters
                     RefreshMenu();
                     break;
                 case 10:
-                    
+                    //npcpresenter.CustomsNPC();
+                    NPCMenu();
                     RefreshMenu();
                     break;
 
             }
-        }       
+        }
+
+
+        private void NPCMenu()
+        {
+            Console.Clear();
+            view.Display("1 - Customs NPC");
+            view.Display("0 - Exit \n");
+            SelectNPC();
+        }
+
+        public void SelectNPC()
+        {
+            input.Response("Select an NPC", null, 0, 1, "Invalid", "Exiting", out choice);
+            switch (choice)
+            {
+                case 1:
+                    npcpresenter.CustomsNPC();
+                    break;
+            }
+        }
 
         private void RefreshMenu()
         {
@@ -105,9 +127,9 @@ namespace Presenters
             view.Display("5 - Adjust Exp (+)");
             view.Display("6 - Adjust Level");
             view.Display("7 - Adjust Storage");
-            view.Display("8 - Buy");
-            view.Display("9 - Sell");
-            view.Display("10 - Test Method");
+            view.Display("8 - Test Buying");
+            view.Display("9 - Test Selling");
+            view.Display("10 - Encounter NPC");
 
             view.Display("0 - Exit \n");
         }

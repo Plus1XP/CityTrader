@@ -10,13 +10,13 @@ namespace Presenters
 {
     public class MenuPresenter
     {
-        private CityPresenter citypresenter = new CityPresenter();
-        private ProductPresenter productpresenter = new ProductPresenter();
         private InputPresenter input = new InputPresenter();
-
-        private DebuggingPresenter debugging = new DebuggingPresenter();
-
         private GameView view = new GameView();
+
+        private CityPresenter citypresenter = new CityPresenter();
+        private ProductPresenter productpresenter = new ProductPresenter();      
+
+        private DebuggingPresenter debugging = new DebuggingPresenter();        
 
         private int? choice;
 

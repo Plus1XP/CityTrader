@@ -70,11 +70,11 @@ namespace Models
 
         public void UpdatePrice()
         {            
-            Price = RNGModel.RandomPrice.Next(LowPrice, HighPrice + 1);
+            Price = RNGModel.RandomNumber.Next(LowPrice, HighPrice + 1);
             Message = null;
 
             int eventChance = SetEventChance();
-            int eventOutcome = RNGModel.RandomPrice.Next(eventChance);
+            int eventOutcome = RNGModel.RandomNumber.Next(eventChance);
             //For hidden value.
             PlayerModel.Instance.EventResults(eventChance);
 

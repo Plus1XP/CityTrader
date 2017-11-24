@@ -8,6 +8,6 @@ namespace Models
 {
     public static class RNGModel
     {
-        public static readonly Random RandomPrice = new Random();
+        public static readonly Random RandomNumber = new Random();
     }
 }
