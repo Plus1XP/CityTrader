@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CityModel.cs" />
+    <Compile Include="Models\CustomsNPCModel.cs" />
     <Compile Include="Models\DebuggingModel.cs" />
     <Compile Include="Models\EventManager.cs" />
     <Compile Include="Models\NPCModel.cs" />

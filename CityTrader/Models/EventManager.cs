@@ -23,14 +23,14 @@ namespace Models
             }
         }
 
-        public delegate void ExpereienceEventHandler(long amount);
-        public event ExpereienceEventHandler OnExperiencedGained;
+        public delegate void NPCEventHandler();
+        public event NPCEventHandler OnRandomEncounter;
 
-        public void GainExperience(long amount)
+        public void RandomEncounter()
         {
-            if (OnExperiencedGained != null)
+            if (OnRandomEncounter != null)
             {
-                OnExperiencedGained(amount);
+                OnRandomEncounter();
             }
         }
     }

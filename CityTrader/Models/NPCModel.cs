@@ -40,6 +40,11 @@ namespace Models
             else if (response.Equals("n") || response.Equals("no"))
             {
                 Message = TryToEscape();
+            }            
+            else
+            {
+                Message = "Invalid Response";
+                Encounter();
             }
             return Message;
         }
@@ -65,16 +70,6 @@ namespace Models
             string Message = "You got away";
             return Message;
         }
-
-        //public virtual string Penalty()
-        //{
-        //    return null;
-        //}
-
-        //public virtual string PenaltyMessage(int penalty)
-        //{
-        //    return null;
-        //}
     }
 
     public class CustomsAgent : NPCModel

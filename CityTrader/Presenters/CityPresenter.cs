@@ -15,6 +15,7 @@ namespace Presenters
         private GameView view = new GameView();
 
         private CityModel model = new CityModel();
+        private NPCModel customs = new CustomsAgent();
 
         private int? choice;
 
@@ -22,7 +23,7 @@ namespace Presenters
 
         public CityPresenter()
         {
-            
+            EventManager.Instance.OnRandomEncounter += RandomEncounter;
         }
 
         public void Update()
@@ -77,6 +78,7 @@ namespace Presenters
                 PlayerModel.Instance.AddInterest();
                 PlayerModel.Instance.isDayOver = true;
                 PlayerModel.Instance.Day++;
+                RandomEncounter();
                 isChoiceConfirmed = true;
             }
             else
@@ -84,6 +86,30 @@ namespace Presenters
                 view.Display($"You are already at {city}.");
                 RefreshMenu();
             }
+        }
+
+        public void RandomEncounter()
+        {
+            int randomnumber = NPCSelection();
+
+            if (randomnumber == 0)
+            {
+                CustomsNPC();
+            }
+        }
+
+        public int NPCSelection()
+        {
+            int randomnumber;
+            randomnumber = RNGModel.RandomNumber.Next(0, 6);
+            return randomnumber;
+        }
+
+        public void CustomsNPC()
+        {
+            view.Display(customs.Encounter());
+            string response = Console.ReadLine().ToLower();
+            view.Display(customs.PlayerInteraction(response));
         }
 
         private void RefreshMenu()
