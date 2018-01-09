@@ -10,12 +10,9 @@ namespace Presenters
 {
     public class NPCPresenter
     {
-        //private CustomsAgent customs = new CustomsAgent();
-        private NPCModel customs = new CustomsAgent();
+        private CustomsAgent customs = new CustomsAgent();
         private GameView view = new GameView();
         private InputPresenter input = new InputPresenter();
-
-        //private int? choice;
 
         public NPCPresenter()
         {

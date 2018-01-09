@@ -15,7 +15,8 @@ namespace Presenters
         private GameView view = new GameView();
 
         private CityModel model = new CityModel();
-        private NPCModel customs = new CustomsAgent();
+        //private NPCModel customs = new CustomsAgent();
+        private CustomsAgent customs = new CustomsAgent();
 
         private int? choice;
 
@@ -107,9 +108,13 @@ namespace Presenters
 
         public void CustomsNPC()
         {
-            view.Display(customs.Encounter());
-            string response = Console.ReadLine().ToLower();
-            view.Display(customs.PlayerInteraction(response));
+            string response;
+            do
+            {
+                view.Display(customs.Encounter());
+                response = Console.ReadLine().ToLower();
+                view.Display(customs.PlayerInteraction(response));
+            } while (!response.Equals ("y") && !response.Equals ("n") && !response.Equals("yes") && !response.Equals("no"));           
         }
 
         private void RefreshMenu()
