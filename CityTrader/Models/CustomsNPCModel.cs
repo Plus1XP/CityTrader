@@ -14,6 +14,14 @@ namespace Models
             this.LowPercentage = 20;
             this.HighPercentage = 50;
             this.EncounterMessage = "Do you have anything to declare? \n(Y)es or (N)o?";
+            this.EncounterRate = 6;
+        }
+
+        public override int NPCInteractionRate()
+        {
+            int randomnumber;
+            randomnumber = RNGModel.RandomNumber.Next(0, EncounterRate);
+            return randomnumber;
         }
 
         public override string Cooperate()

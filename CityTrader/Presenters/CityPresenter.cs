@@ -24,7 +24,7 @@ namespace Presenters
 
         public CityPresenter()
         {
-            EventManager.Instance.OnRandomEncounter += RandomEncounter;
+            EventManager.Instance.OnRandomEncounter += NPCRNGSelection;
         }
 
         public void Update()
@@ -79,7 +79,7 @@ namespace Presenters
                 PlayerModel.Instance.AddInterest();
                 PlayerModel.Instance.isDayOver = true;
                 PlayerModel.Instance.Day++;
-                RandomEncounter();
+                NPCRNGSelection();
                 isChoiceConfirmed = true;
             }
             else
@@ -89,32 +89,28 @@ namespace Presenters
             }
         }
 
-        public void RandomEncounter()
+        public void NPCRNGSelection()
         {
-            int randomnumber = NPCSelection();
-
-            if (randomnumber == 0)
+            if (customs.NPCInteractionRate() == 0)
             {
-                CustomsNPC();
+                CustomsNPCEvent();
             }
         }
 
-        public int NPCSelection()
+        public void CustomsNPCEvent()
         {
-            int randomnumber;
-            randomnumber = RNGModel.RandomNumber.Next(0, 6);
-            return randomnumber;
-        }
-
-        public void CustomsNPC()
-        {
-            string response;
             do
             {
-                view.Display(customs.Encounter());
-                response = Console.ReadLine().ToLower();
-                view.Display(customs.PlayerInteraction(response));
-            } while (!response.Equals ("y") && !response.Equals ("n") && !response.Equals("yes") && !response.Equals("no"));           
+                CustomsNPCUserInteraction();
+            } while (!customs.isUserInputValid);           
+        }
+
+        public void CustomsNPCUserInteraction()
+        {
+            string response;
+            view.Display(customs.Encounter());
+            response = Console.ReadLine().ToLower();
+            view.Display(customs.PlayerInteraction(response));
         }
 
         private void RefreshMenu()

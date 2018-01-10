@@ -14,7 +14,10 @@ namespace Models
         public string LowMessage { get; set; }
         public string HighMessage { get; set; }
         public string EncounterMessage { get; set; }
+        public int EncounterRate { get; set; }
+        public bool isUserInputValid { get; set; }
 
+        public abstract int NPCInteractionRate();
         public abstract string Cooperate();
         public abstract string CooperationMessage(decimal charge);
         public abstract string ReceivePenalty();
@@ -24,6 +27,7 @@ namespace Models
         {
 
         }
+       
 
         public string Encounter()
         {
@@ -31,19 +35,22 @@ namespace Models
         }
 
         public string PlayerInteraction(string response)
-        {
+        {            
             string Message = string.Empty;
             if (response.Equals("y") || response.Equals("yes"))
             {
                 Message = Cooperate();
+                isUserInputValid = true;
             }
             else if (response.Equals("n") || response.Equals("no"))
             {
                 Message = TryToEscape();
+                isUserInputValid = true;
             }            
             else
             {
                 Message = "Invalid Response";
+                isUserInputValid = false;
                 //Encounter();
             }
             return Message;
