@@ -1,42 +1,44 @@
-﻿using System.Collections.Generic;
-
-namespace Models
+﻿namespace Models
 {
-    public class CityModel
+    using System.Collections.Generic;
+
+    public class City
     {
-        public List<CityModel> Cities = new List<CityModel>();
+        private List<City> cities = new List<City>();
 
-        public int CityID { get; set; }
-        public string CityName { get; set; }
-        public string CityMessage { get; set; }
-
-        public CityModel(int id, string name, string message)
+        public City()
         {
-            this.CityID = id;
-            this.CityName = name;
-            this.CityMessage = message;
+            this.AddCity(new City(1, "London", "Welcome to London"));
+            this.AddCity(new City(2, "Paris", "Welcome to Paris"));
+            this.AddCity(new City(3, "Berlin", "Welcome to Berlin"));
+            this.AddCity(new City(4, "Madrid", "Welcome to Madrid"));
+            this.AddCity(new City(5, "Milan", "Welcome to Milan"));
+            this.AddCity(new City(6, "New York", "Welcome to New York"));
+            this.AddCity(new City(7, "Tokyo", "Welcome to Tokyo"));
+            this.AddCity(new City(8, "Hong Kong", "Welcome to Hong Kong"));
         }
 
-        public CityModel()
+        private City(int id, string name, string welcomeMessage)
         {
-            AddCity(new CityModel(1, "London", "Welcome to London"));
-            AddCity(new CityModel(2, "Paris", "Welcome to Paris"));
-            AddCity(new CityModel(3, "Berlin", "Welcome to Berlin"));
-            AddCity(new CityModel(4, "Madrid", "Welcome to Madrid"));
-            AddCity(new CityModel(5, "Milan", "Welcome to Milan"));
-            AddCity(new CityModel(6, "New York", "Welcome to New York"));
-            AddCity(new CityModel(7, "Tokyo", "Welcome to Tokyo"));
-            AddCity(new CityModel(8, "Hong Kong", "Welcome to Hong Kong"));
+            this.ID = id;
+            this.Name = name;
+            this.WelcomeMessage = welcomeMessage;
         }
 
-        public void AddCity(CityModel City)
+        public int ID { get; private set; }
+
+        public string Name { get; private set; }
+
+        public string WelcomeMessage { get; private set; }
+
+        public IEnumerable<City> GetAllCities()
         {
-            Cities.Add(City);
+            return this.cities;
         }
 
-        public IEnumerable<CityModel> GetAllCities()
+        private void AddCity(City city)
         {
-            return Cities;
+            this.cities.Add(city);
         }
     }
 }

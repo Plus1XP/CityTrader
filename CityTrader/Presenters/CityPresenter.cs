@@ -1,141 +1,134 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Models;
-using Views;
-
-namespace Presenters
+﻿namespace Presenters
 {
+    using System;
+
+    using Models;
+    using Views;
+
     public class CityPresenter
-    {
-        private InputPresenter input = new InputPresenter();
+    {       
+        private City city = new City();
+        private CustomsAgent customsAgent = new CustomsAgent();
+        private DialoguePresenter cityChoice;
         private GameView view = new GameView();
 
-        private CityModel model = new CityModel();
-        //private NPCModel customs = new CustomsAgent();
-        private CustomsAgent customs = new CustomsAgent();
-
-        private int? choice;
-
-        private bool isChoiceConfirmed = false;
+        private bool isMenuActive = true;
+        private bool isCitySelected = false;
 
         public CityPresenter()
         {
-            EventManager.Instance.OnRandomEncounter += NPCRNGSelection;
+            EventManager.Instance.OnRandomEncounter += this.SelectNPCEvent;
         }
 
         public void Update()
         {
-            Menu();
+            this.Menu();
             do
             {
-                SelectCity();
-            } while (choice != 0 && !isChoiceConfirmed);
+                this.SelectCity();
+            } while (this.isMenuActive && !this.isCitySelected);
         }
 
         private void SelectCity()
         {
-            input.Response("Please select a city", null, 0, 8, "We only fly to cities 1-8, choose again.", "Welcome Back!", out choice);
-            switch(choice)
+            this.cityChoice = new DialoguePresenter("Please select a city", 0, 8, "We only fly to cities 1-8, choose again.", "Welcome Back!");
+            switch (this.cityChoice.ShowDialogue())
             {
+                case 0:
+                    this.isMenuActive = false;
+                    break;
                 case 1:
-                    TravelToCity("London");
+                    this.TravelToCity("London");
                     break;
                 case 2:
-                    TravelToCity("Paris");
+                    this.TravelToCity("Paris");
                     break;
                 case 3:
-                    TravelToCity("Berlin");
+                    this.TravelToCity("Berlin");
                     break;
                 case 4:
-                    TravelToCity("Madrid");
+                    this.TravelToCity("Madrid");
                     break;
                 case 5:
-                    TravelToCity("Milan");
+                    this.TravelToCity("Milan");
                     break;
                 case 6:
-                    TravelToCity("New York");
+                    this.TravelToCity("New York");
                     break;
                 case 7:
-                    TravelToCity("Tokyo");
+                    this.TravelToCity("Tokyo");
                     break;
                 case 8:
-                    TravelToCity("Hong Kong");
+                    this.TravelToCity("Hong Kong");
                     break;
             }
         }
 
         private void TravelToCity(string city)
         {
-            if(!city.Equals(PlayerModel.Instance.LocationName))
+            if (!city.Equals(Player.Instance.Location))
             {
-                view.Display($"You have arrived at {city}");
-                PlayerModel.Instance.LocationID = choice.Value;
-                PlayerModel.Instance.LocationName = city;
-                PlayerModel.Instance.hasProductPriceUpdated = false;
-                PlayerModel.Instance.AddInterest();
-                PlayerModel.Instance.isDayOver = true;
-                PlayerModel.Instance.Day++;
-                NPCRNGSelection();
-                isChoiceConfirmed = true;
+                this.view.Display($"You have arrived at {city}");
+                Player.Instance.Location = city;
+                Player.Instance.HasProductPriceUpdated = false;
+                Player.Instance.AddDailyInterest();
+                Player.Instance.IsDayOver = true;
+                Player.Instance.Day++;
+                this.SelectNPCEvent();
+                this.isCitySelected = true;
             }
             else
             {
-                view.Display($"You are already at {city}.");
-                RefreshMenu();
+                this.view.Display($"You are already at {city}.");
+                this.RefreshMenu();
             }
         }
 
-        public void NPCRNGSelection()
+        private void SelectNPCEvent()
         {
-            if (customs.NPCInteractionRate() == 0)
+            if (this.customsAgent.InteractionRate() == 0)
             {
-                CustomsNPCEvent();
+               this.InitiateCustomsAgentEvent();
             }
         }
 
-        public void CustomsNPCEvent()
+        private void InitiateCustomsAgentEvent()
         {
             do
             {
-                CustomsNPCUserInteraction();
-            } while (!customs.isUserInputValid);           
+                this.RespondToCustomsAgent();
+            } while (!this.customsAgent.IsPlayerResponseValid);           
         }
 
-        public void CustomsNPCUserInteraction()
+        private void RespondToCustomsAgent()
         {
-            string response;
-            view.Display(customs.Encounter());
-            response = Console.ReadLine().ToLower();
-            view.Display(customs.PlayerInteraction(response));
+            string playerResponse;
+            this.view.Display(this.customsAgent.Encounter());
+            playerResponse = Console.ReadLine().ToLower();
+            this.view.Display(this.customsAgent.PlayerInteraction(playerResponse));
         }
 
         private void RefreshMenu()
         {
-
-            view.Display("Press any key to continue.");
+            this.view.Display("Press any key to continue.");
             Console.ReadKey();            
-            Update();
+            this.Update();
         }
 
         private void Menu()
         {
             Console.Clear();
 
-            view.Display(PlayerModel.Instance.DayDetails());
-            
-            view.Display("Where would you like to travel to? \n");
+            this.view.Display(Player.Instance.Status());
 
-            foreach (var city in model.GetAllCities())
+            this.view.Display("Where would you like to travel to? \n");
+
+            foreach (var city in city.GetAllCities())
             {
-                view.Display($"{ city.CityID} - { city.CityName}");
+                this.view.Display($"{ city.ID} - { city.Name}");
             }
 
-            view.Display("\n0 - Stay here! \n");
+            this.view.Display("\n0 - Stay here! \n");
         }
-
     }
 }

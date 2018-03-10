@@ -1,93 +1,123 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
-    public class ProductModel
+    using System;
+    using System.Collections.Generic;
+
+    public class Product
     {
-        public List<ProductModel> Products = new List<ProductModel>();
+        // <field name="eventMultiplier">The price multiplier when an event is triggered.</field>
+        // <field name="eventRate">The chance of triggering an event.</field>
+        // <field name="minimumEventChance">The minimium Chance of triggering an event.</field>
+        private readonly int eventMultiplier = 3;
+        private readonly int eventRate = 10;
+        private readonly int minimumEventChance = 4;
 
-        public int ProductID { get; set; }
-        public string ProductName { get; set; }
-        public string ProductNamePlural { get; set; }
+        private List<Product> products = new List<Product>();
+
+        public Product()
+        {
+            this.AddProducts(new Product(1, "Luxury Watch", "Luxury watches", 50000, 60000));
+            this.AddProducts(new Product(2, "Luxury Handbag", "Luxury Handbags", 25000, 30000));
+            this.AddProducts(new Product(3, "Luxury Shoes", "Luxury Shoes", 5000, 8000));
+            this.AddProducts(new Product(4, "Topend Electronics", "Topend Electronics", 2000, 4000));
+            this.AddProducts(new Product(5, "Flagship Cellphone", "Flagship Cellphones", 600, 1000));
+            this.AddProducts(new Product(6, "Designer Jeans", "Designer Jeans", 300, 500));
+            this.AddProducts(new Product(7, "Limited Sneakers", "Limited Sneakers", 100, 200));
+            this.AddProducts(new Product(8, "Hignhend Makeup Kit", "highend Makeup Kits", 50, 100));
+            this.AddProducts(new Product(9, "Fitted Cap", "Fitted Caps", 25, 50));
+            this.AddProducts(new Product(10, "Fashion Accessorie", "Fashion Accessories", 10, 25));
+        }
+
+        private Product(int id, string name, string namePlural, int lowPrice, int highPrice)
+        {
+            this.ID = id;
+            this.Name = name;
+            this.PluralName = namePlural;
+            this.LowestSalePrice = lowPrice;
+            this.HighestSalePrice = highPrice;
+        }
+
+        public string Name { get; private set; }
+
+        public string PluralName { get; private set; }
+
+        public string LowestSalePriceMessage { get; private set; }
+
+        public string HighestSalePriceMessage { get; private set; }
+
+        public string PriceGuideMessage { get; private set; }
+
+        public int ID { get; private set; }
+
+        public int LowestSalePrice { get; private set; }
+
+        public int HighestSalePrice { get; private set; }
+
+        public int CurrentSalePrice { get; private set; }
+
+        public int PreviousSalePrice { get; set; }
+
         public int Quantity { get; set; }
-        //public int MaxQuantity { get; set; } = 1000;
-        public int LowPrice { get; set; }
-        public int HighPrice {get; set;}
-        public string LowMessage { get; set; }
-        public string HighMessage { get; set; }
-        public int Price { get; set; }
-        public int OldPrice { get; set; }
-        public string Message { get; set; }
-        public long ProductExperience { get; set; }
 
-        private int eventMultiplier = 3;
-        private int eventRate = 10;
-        private int minimumEventChance = 4;
+        public long ExperiencePoints { get; set; }
 
-        public ProductModel(int id, string name, string namePlural, int lowPrice, int highPrice)
+        public List<Product> ProductList
         {
-            this.ProductID = id;
-            this.ProductName = name;
-            this.ProductNamePlural = namePlural;
-            this.LowPrice = lowPrice;
-            this.HighPrice = highPrice;
+            get
+            {
+                return this.products;
+            }
         }
 
-        public ProductModel()
+        public IEnumerable<Product> GetAllProducts()
         {
-            AddProducts(new ProductModel(1, "Luxury Watch", "Luxury watches", 50000, 60000));
-            AddProducts(new ProductModel(2, "Luxury Handbag", "Luxury Handbags", 25000, 30000));
-            AddProducts(new ProductModel(3, "Luxury Shoes", "Luxury Shoes", 5000, 8000));
-            AddProducts(new ProductModel(4, "Topend Electronics", "Topend Electronics", 2000, 4000));
-            AddProducts(new ProductModel(5, "Flagship Cellphone", "Flagship Cellphones", 600, 1000));
-            AddProducts(new ProductModel(6, "Designer Jeans", "Designer Jeans", 300, 500));
-            AddProducts(new ProductModel(7, "Limited Sneakers", "Limited Sneakers", 100, 200));
-            AddProducts(new ProductModel(8, "Hignhend Makeup Kit", "highend Makeup Kits", 50, 100));
-            AddProducts(new ProductModel(9, "Fitted Cap", "Fitted Caps", 25, 50));
-            AddProducts(new ProductModel(10, "Fashion Accessorie", "Fashion Accessories", 10, 25));
-        }
-
-        public void AddProducts(ProductModel product)
-        {
-            Products.Add(product);
-        }
-
-        public IEnumerable<ProductModel>GetAllProducts()
-        {
-            return Products;
-        }
-
-        public int SetEventChance()
-        {
-            int eventChance;
-            int playerLevelEventRate = (this.eventRate + 1) - PlayerModel.Instance.CurrentLevel;
-            return eventChance = Math.Max(minimumEventChance, playerLevelEventRate);
+            return this.products;
         }
 
         public void UpdatePrice()
-        {            
-            Price = RNGModel.RandomNumber.Next(LowPrice, HighPrice + 1);
-            Message = null;
+        {
+            this.CurrentSalePrice = RNGModel.RandomNumber.Next(this.LowestSalePrice, this.HighestSalePrice + 1);
+            this.PriceGuideMessage = null;
 
-            int eventChance = SetEventChance();
+            int eventChance = this.SetEventChance();
             int eventOutcome = RNGModel.RandomNumber.Next(eventChance);
-            //For hidden value.
-            PlayerModel.Instance.EventResults(eventChance);
 
             if (eventOutcome == 0)
             {
-                Price *= eventMultiplier;
-                Message = "- Prices are high!";
+                this.SetHighSalePrice();
             }
             else if (eventOutcome == 1)
             {
-                Price /= eventMultiplier;
-                Message = "- Prices are low!";
+                this.SetLowSalePrice();
             }
+
+            // <summary>Used for debugging, hidden value passed back to "Player.eventChanceReults".</summary>
+            Player.Instance.EventResults(eventChance);
+        }
+
+        // <summary>Returns a value corresponding to the chance of an event being triggered based on the players level.</summary>
+        private int SetEventChance()
+        {
+            int eventChance;
+            int playerLevelEventRate = (this.eventRate + 1) - Player.Instance.Level;
+            return eventChance = Math.Max(this.minimumEventChance, playerLevelEventRate);
+        }
+
+        private void SetHighSalePrice()
+        {
+            this.CurrentSalePrice *= this.eventMultiplier;
+            this.PriceGuideMessage = "- Prices are high!";
+        }
+
+        private void SetLowSalePrice()
+        {
+            this.CurrentSalePrice /= this.eventMultiplier;
+            this.PriceGuideMessage = "- Prices are low!";
+        }
+
+        private void AddProducts(Product product)
+        {
+            this.products.Add(product);
         }
     }
 }

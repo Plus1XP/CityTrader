@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Views
+﻿namespace Views
 {
+    using System;
+
     public class GameView
     {
         public void Display(string display)

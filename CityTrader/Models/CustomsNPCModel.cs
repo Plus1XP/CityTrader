@@ -1,73 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
-    public class CustomsAgent : NPCModel
+    public class CustomsAgent : NPC
     {
         public CustomsAgent() : base()
         {
             this.Name = "TSA";
-            this.LowPercentage = 20;
-            this.HighPercentage = 50;
+            this.PenaltyPercentageLow = 20;
+            this.PenaltyPercentageHigh = 50;
             this.EncounterMessage = "Do you have anything to declare? \n(Y)es or (N)o?";
             this.EncounterRate = 6;
         }
 
-        public override int NPCInteractionRate()
+        public override int InteractionRate()
         {
-            int randomnumber;
-            randomnumber = RNGModel.RandomNumber.Next(0, EncounterRate);
-            return randomnumber;
+            int randomNumber;
+            randomNumber = RNGModel.RandomNumber.Next(0, this.EncounterRate);
+            return randomNumber;
         }
 
         public override string Cooperate()
         {
             string message = string.Empty;
-            decimal customsCharge = CalculateCooperationPercentage();
-            PlayerModel.Instance.Money -= customsCharge;
-            message = CooperationMessage(customsCharge);
+            decimal customsCharge = this.CalculateCooperationPercentage();
+            Player.Instance.Money -= customsCharge;
+            message = this.CooperationMessage(customsCharge);
             return message;
         }
 
         public decimal CalculateCooperationPercentage()
         {
-            decimal customsPercentage = (decimal)LowPercentage / 100;
-            decimal customCharge = PlayerModel.Instance.Money * customsPercentage;
+            decimal customsPercentage = (decimal)PenaltyPercentageLow / 100;
+            decimal customCharge = Player.Instance.Money * customsPercentage;
             return customCharge;
         }
 
         public override string CooperationMessage(decimal charge)
         {
-            string Message = $"Thank you for your cooperation! \nYou have been charged our lowest rate {charge:C}";
-            return Message;
+            string message = $"Thank you for your cooperation! \nYou have been charged our lowest rate {charge:C}";
+            return message;
         }
 
         public override string ReceivePenalty()
         {
-            string Message = string.Empty;
-            decimal finalPenalty = CalculatePenaltyPercentage();
-            PlayerModel.Instance.Money -= finalPenalty;
-            Message = PenaltyMessage(finalPenalty);
-            return Message;
+            string message = string.Empty;
+            decimal finalPenalty = this.CalculatePenaltyPercentage();
+            Player.Instance.Money -= finalPenalty;
+            message = this.PenaltyMessage(finalPenalty);
+            return message;
         }
 
         public decimal CalculatePenaltyPercentage()
         {
-            int randomPenalty = RNGModel.RandomNumber.Next(LowPercentage + 5, HighPercentage + 1);
-            //Either cast the equation to a double or use.0 after the int to force it as a double. 
+            int randomPenalty = RNGModel.RandomNumber.Next(PenaltyPercentageLow + 5, PenaltyPercentageHigh + 1);
+
+            // <field name="randomPenalty">Cast to a decimal instead of using "100.0" otherwise the equation will think its an int.</field>
             decimal penaltyPercentage = (decimal)randomPenalty / 100;
-            decimal penaltyCharge = PlayerModel.Instance.Money * penaltyPercentage;
+
+            decimal penaltyCharge = Player.Instance.Money * penaltyPercentage;
             return penaltyCharge;
         }
 
         public override string PenaltyMessage(decimal penalty)
         {
-            string Message = $"You have been randomly searched. You have not declared your items! \nYou have been fined {penalty:C}";
-            return Message;
+            string message = $"You have been randomly searched. You have not declared your items! \nYou have been fined {penalty:C}";
+            return message;
         }
     }
 }

@@ -1,137 +1,138 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using Views;
-
-namespace Presenters
+﻿namespace Presenters
 {
-    class DebuggingPresenter
+    using System;
+
+    using Models;
+    using Views;
+
+    public class DebuggingPresenter
     {
-        private InputPresenter input = new InputPresenter();
+        private Debug debug = new Debug();
+        private ProductPresenter productPresenter = new ProductPresenter();
+        private NPCPresenter npcPresenter = new NPCPresenter();
+        private DialoguePresenter menuChoice;
+        private DialoguePresenter npcChoice;
         private GameView view = new GameView();
-
-        private DebuggingModel debuggingmodel = new DebuggingModel();
-        private ProductPresenter productpresenter = new ProductPresenter();
-        private NPCPresenter npcpresenter = new NPCPresenter();
-
-        private int? choice;
+        
+        private bool isMenuActive = true;
 
         public DebuggingPresenter()
         {
-
         }
 
         public void Update()
         {
-            Menu();
+            this.Menu();
             do
             {                
-                SelectAction();
-            } while (choice != 0);
+                this.SelectAction();
+            } while (this.isMenuActive);
         }
 
-        public void SelectAction()
+        private void SelectAction()
         {
-            input.Response("Select an option", null, 0, 10, "Invalid", "Exiting", out choice);
-            switch (choice)
+            this.menuChoice = new DialoguePresenter("select an option", 0, 10, "Invalid", "Exiting");
+            switch (this.menuChoice.ShowDialogue())
             {
+                case 0:
+                    this.isMenuActive = false;
+                    break;
                 case 1:
-                    PlayerModel.Instance.hasProductPriceUpdated = false;
-                    RefreshMenu();
+                    this.debug.RefreshProductPrices();
+                    this.RefreshMenu();
                     break;
                 case 2:
-                    PlayerModel.Instance.isDebtPaid = true;
-                    RefreshMenu();
+                    this.debug.RemoveDebtFlag();
+                    this.RefreshMenu();
                     break;
                 case 3:
-                    debuggingmodel.AdjustDay();
-                    RefreshMenu();
+                    this.menuChoice = new DialoguePresenter("Enter amount between 1 - 30", 1, 30, "invalid");
+                    this.debug.AdjustDay(this.menuChoice.ShowDialogue());
+                    this.RefreshMenu();
                     break;
                 case 4:
-                    debuggingmodel.AdjustMoney();
-                    RefreshMenu();
+                    this.menuChoice = new DialoguePresenter("Enter amount between 0 - 1,000,000,000 \nA - Max", 0, 1000000000, "invalid", null, 1000000000, "a", "all");
+                    this.debug.AdjustMoney(this.menuChoice.ShowDialogue());
+                    this.RefreshMenu();
                     break;
                 case 5:
-                    view.Display(debuggingmodel.AdjustEXP());
-                    RefreshMenu();
+                    this.menuChoice = new DialoguePresenter("Enter amount between 0 - 1,000,000,000", 0, 1000000000, "invalid");
+                    this.view.Display(this.debug.AdjustEXP(this.menuChoice.ShowDialogue()));
+                    this.RefreshMenu();
                     break;
                 case 6:
-                    debuggingmodel.AdjustLevel();
-                    RefreshMenu();
+                    this.menuChoice = new DialoguePresenter("Enter amount between 0 - 50", 0, 50, "invalid");
+                    this.debug.AdjustLevel(this.menuChoice.ShowDialogue());
+                    this.RefreshMenu();
                     break;
                 case 7:
-                    debuggingmodel.AdjustStorage();
-                    RefreshMenu();
+                    this.menuChoice = new DialoguePresenter("Enter amount between 0 - 50000", 0, 50000, "invalid");
+                    this.debug.AdjustStorage(this.menuChoice.ShowDialogue());
+                    this.RefreshMenu();
                     break;
                 case 8:
-                    PlayerModel.Instance.isBuying = true;
-                    productpresenter.Update();
-                    RefreshMenu();
+                    this.debug.SetBuyingFlag();
+                    this.productPresenter.Update();
+                    this.RefreshMenu();
                     break;
                 case 9:
-                    PlayerModel.Instance.isBuying = false;
-                    productpresenter.Update();
-                    RefreshMenu();
+                    this.debug.SetSellingFlag();
+                    this.productPresenter.Update();
+                    this.RefreshMenu();
                     break;
                 case 10:
-                    //npcpresenter.CustomsNPC();
-                    NPCMenu();
-                    RefreshMenu();
+                    this.NPCMenu();
+                    this.RefreshMenu();
                     break;
-
             }
         }
-
 
         private void NPCMenu()
         {
             Console.Clear();
-            view.Display("1 - Customs NPC");
-            view.Display("0 - Exit \n");
-            SelectNPC();
+           this.view.Display("1 - Customs NPC");
+            this.view.Display("0 - Exit \n");
+            this.SelectNPC();
         }
 
-        public void SelectNPC()
+        private void SelectNPC()
         {
-            input.Response("Select an NPC", null, 0, 1, "Invalid", "Exiting", out choice);
-            switch (choice)
+            this.npcChoice = new DialoguePresenter("Select an NPC", 0, 1, "Invalid", "Exiting");
+            switch (this.npcChoice.ShowDialogue())
             {
                 case 1:
-                    npcpresenter.CustomsNPC();
+                    this.npcPresenter.CustomsNPC();
                     break;
             }
         }
 
         private void RefreshMenu()
         {
-            view.Display("Press any key to continue");
+            this.view.Display("Press any key to continue");
             Console.ReadKey();
-            Menu();
+            this.Menu();
         }
 
         private void Menu()
         {
             Console.Clear();
 
-            view.Display(debuggingmodel.DebugDetails());
+            this.view.Display(this.debug.GetStatus());
 
-            view.Display("Debugging Tools \n");
+            this.view.Display("Debugging Tools \n");
 
-            view.Display("1 - Refresh Prices");
-            view.Display("2 - Remove Debt Flag");
-            view.Display("3 - Adjust Day");
-            view.Display("4 - Adjust Money");
-            view.Display("5 - Adjust Exp (+)");
-            view.Display("6 - Adjust Level");
-            view.Display("7 - Adjust Storage");
-            view.Display("8 - Test Buying");
-            view.Display("9 - Test Selling");
-            view.Display("10 - Encounter NPC");
+            this.view.Display("1 - Refresh Prices");
+            this.view.Display("2 - Remove Debt Flag");
+            this.view.Display("3 - Adjust Day");
+            this.view.Display("4 - Adjust Money");
+            this.view.Display("5 - Adjust Exp (+)");
+            this.view.Display("6 - Adjust Level");
+            this.view.Display("7 - Adjust Storage");
+            this.view.Display("8 - Test Buying");
+            this.view.Display("9 - Test Selling");
+            this.view.Display("10 - Encounter NPC");
 
-            view.Display("0 - Exit \n");
+            this.view.Display("0 - Exit \n");
         }
     }
 }

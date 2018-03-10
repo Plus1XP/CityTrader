@@ -1,74 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using Views;
-
-namespace Presenters
+﻿namespace Presenters
 {
+    using System;
+
+    using Models;
+    using Views;
+
     public class MenuPresenter
     {
-        private InputPresenter input = new InputPresenter();
-        private GameView view = new GameView();
-
-        private CityPresenter citypresenter = new CityPresenter();
-        private ProductPresenter productpresenter = new ProductPresenter();      
-
-        private DebuggingPresenter debugging = new DebuggingPresenter();        
-
-        private int? choice;
-
-        public MenuPresenter()
-        {
-
-        }
+        private readonly CityPresenter cityPresenter = new CityPresenter();
+        private readonly ProductPresenter productPresenter = new ProductPresenter();
+        private readonly DebuggingPresenter debugPresenter = new DebuggingPresenter();
+        private readonly GameView view = new GameView();
+        private DialoguePresenter menuChoice;
 
         public void Update()
         {
-            Menu();
+            this.Menu();
             do
             {
-                PlayerModel.Instance.isDayOver = false;
-                SelectAction();
-            } while (choice != 0 && PlayerModel.Instance.isDayOver == false);
+                Player.Instance.IsDayOver = false;
+                this.SelectAction();
+            } while (!Player.Instance.HasQuitGame && !Player.Instance.IsDayOver);
         }
 
-        public void SelectAction()
+        private void SelectAction()
         {
-            input.Response("Please select an activity", null, 0, 6, "More features to come soon! For now choose from 1-5", null, out choice);
-            switch (choice)
+            this.menuChoice = new DialoguePresenter("Please select an activity", 0, 6, "More features to come soon!For now choose from 1 - 5", null, 6, "let me in");
+            switch (this.menuChoice.ShowDialogue())
             {
                 case 0:
-                    PlayerModel.Instance.hasQuitGame = true;
+                    Player.Instance.HasQuitGame = true;
                     break;
                 case 1:
-                    citypresenter.Update();
-                    RefreshMenu();
+                    this.cityPresenter.Update();
+                    this.RefreshMenu();
                     break;
                 case 2:
-                    PlayerModel.Instance.isBuying = true;
-                    productpresenter.Update();
-                    RefreshMenu();
+                    Player.Instance.IsBuying = true;
+                    this.productPresenter.Update();
+                    this.RefreshMenu();
                     break;
                 case 3:
-                    PlayerModel.Instance.isBuying = false;
-                    productpresenter.Update();
-                    RefreshMenu();
+                    Player.Instance.IsBuying = false;
+                    this.productPresenter.Update();
+                    this.RefreshMenu();
                     break;
                 case 4:
-                    productpresenter.ProductInventory();
-                    RefreshMenu();
+                    this.productPresenter.ProductInventory();
+                    this.RefreshMenu();
                     break;
                 case 5:
-                    PayLoan();
-                    RefreshMenu();
+                    this.PayLoan();
+                    this.RefreshMenu();
                     break;
                 case 6:
-                    //If disabled remove option 6 from input.response
-                    debugging.Update();
-                    RefreshMenu();
+                    // <switch name="case 6">Used for debug menu, if disabled remove override choice 6 from "menuChoice.ShowDialogue".</switch>
+                    this.debugPresenter.Update();
+                    this.RefreshMenu();
                     break;
             }
         }
@@ -76,35 +64,35 @@ namespace Presenters
         private void PayLoan()
         {
             Console.Clear();
-            view.Display(PlayerModel.Instance.DayDetails());
-            view.Display(PlayerModel.Instance.PayLoan());
-            string response = Console.ReadLine().ToLower();
-            PlayerModel.Instance.PayLoan(response);
+            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.PayLoan());
+            var playerResponse = Console.ReadLine().ToLower();
+            Player.Instance.PayLoan(playerResponse);
         }
 
         private void RefreshMenu()
         {
-            view.Display("Press any key to continue");
+            this.view.Display("Press any key to continue");
             Console.ReadKey();
-            Menu();
+            this.Menu();
         }
 
         private void Menu()
         {
             Console.Clear();
 
-            view.Display(PlayerModel.Instance.DayDetails());
+            this.view.Display(Player.Instance.Status());
 
-            view.Display("What would you like to do? \n");
+            this.view.Display("What would you like to do? \n");
 
-            view.Display("1 - Change City");
-            view.Display("2 - Buy merchandise");
-            view.Display("3 - Sell merchandise");
-            view.Display("4 - View inventory");
-            view.Display("5 - Repay loan \n");
-            view.Display("6 - Debugging Tools \n");
+            this.view.Display("1 - Change City");
+            this.view.Display("2 - Buy merchandise");
+            this.view.Display("3 - Sell merchandise");
+            this.view.Display("4 - View inventory");
+            this.view.Display("5 - Repay loan \n");
+            ////view.Display("6 - Debugging Tools \n");
 
-            view.Display("0 - Quit \n");
+            this.view.Display("0 - Quit \n");
         }
     }
 }

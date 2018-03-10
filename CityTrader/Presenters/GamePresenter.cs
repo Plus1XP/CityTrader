@@ -1,65 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using Views;
-
-namespace Presenters
+﻿namespace Presenters
 {
+    using System;
+
+    using Models;
+    using Views;
+
     public class GamePresenter
     {
-        private GameView view = new GameView();
-
-        private MenuPresenter presenter = new MenuPresenter();        
+        private readonly MenuPresenter menuPresenter = new MenuPresenter();
+        private readonly GameView view = new GameView();
 
         public GamePresenter()
         {
-            Update();
+            this.Update();
         }
 
         private void Update()
         {
-            while (PlayerModel.Instance.Day <= 30 && PlayerModel.Instance.Money >= 0 && !PlayerModel.Instance.hasQuitGame)
+            while (Player.Instance.Day <= 30 && Player.Instance.Money >= 0 && !Player.Instance.HasQuitGame)
             {
-                GameChecks();
-                GameStart();
+                this.GameChecks();
+                this.GameStart();
             }
-            GameOver();
+
+            this.GameOver();
         }
 
         private void GameStart()
         {
-            presenter.Update();
+            this.menuPresenter.Update();
         }
 
         private void GameOver()
         {
             Console.Clear();
-            if (PlayerModel.Instance.Day >= 30)
-            {                
-                view.Display("\nTimes up! \n");
-            }
-            if (PlayerModel.Instance.Money < 0)
+
+            if (Player.Instance.Day >= 30)
             {
-                view.Display("\nYour broke! \n");
+                this.view.Display("\nTimes up! \n");
             }
-            if (PlayerModel.Instance.hasQuitGame)
+
+            if (Player.Instance.Money < 0)
             {
-                view.Display("\nThanks for playing! \n");
+                this.view.Display("\nYour broke! \n");
             }
-            view.Display(PlayerModel.Instance.FinalScore());
+
+            if (Player.Instance.HasQuitGame)
+            {
+                this.view.Display("\nThanks for playing! \n");
+            }
+
+            this.view.Display(Player.Instance.FinalScore());
             Console.ReadKey();
         }
 
         private void GameChecks()
         {
-            if (PlayerModel.Instance.Day == 29)
+            if (Player.Instance.Day == 29)
             {
                 Console.Clear();
-                view.Display("\nYou have 1 day left, make it count!");
-                view.Display("Press any key to continue");
+                this.view.Display("\nYou have 1 day left, make it count!");
+                this.view.Display("Press any key to continue");
                 Console.ReadKey();
             }
         }

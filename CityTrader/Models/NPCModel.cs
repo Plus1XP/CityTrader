@@ -1,81 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
-    public abstract class NPCModel
+    public abstract class NPC
     {
-        public string Name { get; set; }
-        public int LowPercentage { get; set; }
-        public int HighPercentage { get; set; }
-        public string LowMessage { get; set; }
-        public string HighMessage { get; set; }
-        public string EncounterMessage { get; set; }
-        public int EncounterRate { get; set; }
-        public bool isUserInputValid { get; set; }
+        public NPC()
+        {
+        }
 
-        public abstract int NPCInteractionRate();
+        public bool IsPlayerResponseValid { get; set; }
+
+        protected string Name { get; set; }
+
+        protected string EncounterMessage { get; set; }
+
+        protected string PenaltyMessageLow { get; set; }
+
+        protected string PenaltyMessageHigh { get; set; }
+
+        protected int PenaltyPercentageLow { get; set; }
+
+        protected int PenaltyPercentageHigh { get; set; }
+
+        protected int EncounterRate { get; set; }
+
         public abstract string Cooperate();
+
         public abstract string CooperationMessage(decimal charge);
+
         public abstract string ReceivePenalty();
+
         public abstract string PenaltyMessage(decimal penalty);
 
-        public NPCModel()
-        {
-
-        }
-       
+        public abstract int InteractionRate();
 
         public string Encounter()
         {
-            return EncounterMessage;
+            return this.EncounterMessage;
         }
 
-        public string PlayerInteraction(string response)
+        public string PlayerInteraction(string playerResponse)
         {            
-            string Message = string.Empty;
-            if (response.Equals("y") || response.Equals("yes"))
+            string message = string.Empty;
+
+            if (playerResponse.Equals("y") || playerResponse.Equals("yes"))
             {
-                Message = Cooperate();
-                isUserInputValid = true;
+                message = this.Cooperate();
+                this.IsPlayerResponseValid = true;
             }
-            else if (response.Equals("n") || response.Equals("no"))
+            else if (playerResponse.Equals("n") || playerResponse.Equals("no"))
             {
-                Message = TryToEscape();
-                isUserInputValid = true;
+                message = this.TryToEscape();
+                this.IsPlayerResponseValid = true;
             }            
             else
             {
-                Message = "Invalid Response";
-                isUserInputValid = false;
-                //Encounter();
+                message = "Invalid Response";
+                this.IsPlayerResponseValid = false;
             }
-            return Message;
+
+            return message;
         }
 
-        public string TryToEscape()
+        private string TryToEscape()
         {
-            string Message = string.Empty;
-            int Outcome = RNGModel.RandomNumber.Next(0, 2);
+            string message = string.Empty;
 
-            if (Outcome == 0)
+            int escapeOutcome = RNGModel.RandomNumber.Next(0, 2);
+
+            if (escapeOutcome == 0)
             {
-                Message = EscapeMessage();
+                message = this.EscapeMessage();
             }
-            else if (Outcome == 1)
+            else if (escapeOutcome == 1)
             {
-                Message = ReceivePenalty();
+                message = this.ReceivePenalty();
             }
-            return Message;
+
+            return message;
         }
 
-        public string EscapeMessage()
+        private string EscapeMessage()
         {
-            string Message = "You got away";
-            return Message;
+            string message = "You got away";
+            return message;
         }
     }
 }

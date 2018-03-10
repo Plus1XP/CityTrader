@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
+    using System;
+
     public static class RNGModel
     {
         public static readonly Random RandomNumber = new Random();

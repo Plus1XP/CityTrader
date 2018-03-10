@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
     public class EventManager
     {
         private static EventManager instance;
+
+        public delegate void NPCEventHandler();
+
+        public event NPCEventHandler OnRandomEncounter;
 
         public static EventManager Instance
         {
@@ -21,16 +19,13 @@ namespace Models
 
                 return instance;
             }
-        }
-
-        public delegate void NPCEventHandler();
-        public event NPCEventHandler OnRandomEncounter;
+        }        
 
         public void RandomEncounter()
         {
-            if (OnRandomEncounter != null)
+            if (this.OnRandomEncounter != null)
             {
-                OnRandomEncounter();
+                this.OnRandomEncounter();
             }
         }
     }
