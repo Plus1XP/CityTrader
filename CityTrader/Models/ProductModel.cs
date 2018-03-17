@@ -33,8 +33,8 @@
             this.ID = id;
             this.Name = name;
             this.PluralName = namePlural;
-            this.LowestSalePrice = lowPrice;
-            this.HighestSalePrice = highPrice;
+            this.LowestPrice = lowPrice;
+            this.HighestPrice = highPrice;
         }
 
         public string Name { get; private set; }
@@ -49,13 +49,13 @@
 
         public int ID { get; private set; }
 
-        public int LowestSalePrice { get; private set; }
+        public int LowestPrice { get; private set; }
 
-        public int HighestSalePrice { get; private set; }
+        public int HighestPrice { get; private set; }
 
-        public int CurrentSalePrice { get; private set; }
+        public int CurrentPrice { get; private set; }
 
-        public int PreviousSalePrice { get; set; }
+        public int PurchasePrice { get; set; }
 
         public int Quantity { get; set; }
 
@@ -76,7 +76,7 @@
 
         public void UpdatePrice()
         {
-            this.CurrentSalePrice = RNGModel.RandomNumber.Next(this.LowestSalePrice, this.HighestSalePrice + 1);
+            this.CurrentPrice = RNGModel.RandomNumber.Next(this.LowestPrice, this.HighestPrice + 1);
             this.PriceGuideMessage = null;
 
             int eventChance = this.SetEventChance();
@@ -91,8 +91,8 @@
                 this.SetLowSalePrice();
             }
 
-            // <summary>Used for debugging, hidden value passed back to "Player.eventChanceReults".</summary>
-            Player.Instance.EventResults(eventChance);
+            // <summary>Used for debugging, hidden value passed back to "Player.eventChance".</summary>
+            Player.Instance.EventChance = eventChance;
         }
 
         // <summary>Returns a value corresponding to the chance of an event being triggered based on the players level.</summary>
@@ -105,13 +105,13 @@
 
         private void SetHighSalePrice()
         {
-            this.CurrentSalePrice *= this.eventMultiplier;
+            this.CurrentPrice *= this.eventMultiplier;
             this.PriceGuideMessage = "- Prices are high!";
         }
 
         private void SetLowSalePrice()
         {
-            this.CurrentSalePrice /= this.eventMultiplier;
+            this.CurrentPrice /= this.eventMultiplier;
             this.PriceGuideMessage = "- Prices are low!";
         }
 

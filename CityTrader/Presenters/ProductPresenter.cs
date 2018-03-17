@@ -33,7 +33,7 @@
         {
             Console.Clear();
 
-            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.Status);
 
             this.view.Display("Product Inventory \n");
 
@@ -81,7 +81,7 @@
         {
             if (Player.Instance.IsBuying)
             {
-                if (p.CurrentSalePrice <= Player.Instance.Money)
+                if (p.CurrentPrice <= Player.Instance.Money)
                 {
                     this.ChooseQuantity(p);
                 }
@@ -118,7 +118,7 @@
                 this.buyQuantityChoice = new DialoguePresenter("\nHow many would you like to purchase? \nEnter a value or buy (a)ll available.", 0, purchaseLimit, $"You can only purchase {purchaseLimit} units, choose again.", "Sorry you changed your mind!", purchaseLimit, "a", "all");
                 productQuantity = this.buyQuantityChoice.ShowDialogue();
 
-                if (Player.Instance.Money >= (p.CurrentSalePrice * productQuantity))
+                if (Player.Instance.Money >= (p.CurrentPrice * productQuantity))
                 {
                     this.TransactionComplete(p, productQuantity);
                 }
@@ -140,9 +140,9 @@
             if (Player.Instance.IsBuying)
             {
                 // Add method to calculate the average price to display potential profits.
-                p.PreviousSalePrice = p.CurrentSalePrice;
+                p.PurchasePrice = p.CurrentPrice;
                 p.Quantity += productQuantity.Value;
-                Player.Instance.Money -= p.CurrentSalePrice * productQuantity.Value;
+                Player.Instance.Money -= p.CurrentPrice * productQuantity.Value;
 
                 if (productQuantity == 1)
                 {
@@ -155,9 +155,9 @@
             }
             else
             {
-                this.view.Display(Player.Instance.AddExperiencePoints(p.CurrentSalePrice, p.PreviousSalePrice, productQuantity.Value));
+                this.view.Display(Player.Instance.AddExperiencePoints(p.CurrentPrice, p.PurchasePrice, productQuantity.Value));
                 p.Quantity -= productQuantity.Value;
-                Player.Instance.Money += (decimal)p.CurrentSalePrice * (decimal)productQuantity.Value;                
+                Player.Instance.Money += (decimal)p.CurrentPrice * (decimal)productQuantity.Value;                
                 if (productQuantity == 1)
                 {
                     this.view.Display($"A {p.Name} has been sold!");
@@ -175,7 +175,7 @@
         private int CalculatePurchaseLimit(Product p)
         {
             // <field name="maxPurchase">If this value exceeds the data type range, an overflow exception will occur.</field>
-            int maxPurchase = (int)Math.Floor(Player.Instance.Money / p.CurrentSalePrice);
+            int maxPurchase = (int)Math.Floor(Player.Instance.Money / p.CurrentPrice);
             int currentStorage = Player.Instance.Storage - p.Quantity;
             int purchaseLimit = Math.Min(currentStorage, maxPurchase);
             return purchaseLimit;
@@ -191,13 +191,13 @@
         {
             Console.Clear();
 
-            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.Status);
 
             this.view.Display("What would you like to trade? \n");
 
             foreach (Product product in this.product.GetAllProducts())
             {
-                string stockList = $"{product.ID} - {product.Name}: {product.CurrentSalePrice:C}";
+                string stockList = $"{product.ID} - {product.Name}: {product.CurrentPrice:C}";
                 string priceMessage = $"{product.PriceGuideMessage}";
                 string inventory = $"| Inventory: {product.Quantity} / {Player.Instance.Storage}";
                 this.view.Display($"{stockList,-40} {priceMessage,-25} {inventory,20}");

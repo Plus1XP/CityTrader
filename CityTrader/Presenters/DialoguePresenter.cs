@@ -34,7 +34,7 @@
             {
                 do
                 {
-                    this.view.Display(this.dialogue.GetPrompt());
+                    this.view.Display(this.dialogue.Prompt);
                     string userResponse = Console.ReadLine().ToLower();
                     this.dialogueResult = this.dialogue.SortResponse(userResponse);
                     this.DisplayMessage();
@@ -42,7 +42,7 @@
             }
             catch
             {
-                this.view.Display(this.dialogue.GetErrorMessage());
+                this.view.Display(this.dialogue.ErrorMessage);
                 this.ShowDialogue();
             }
 
@@ -51,9 +51,9 @@
 
         public void DisplayMessage()
         {
-            if (this.dialogue.GetMessage() != null)
+            if (this.dialogue.Message != null)
             {
-                this.view.Display(this.dialogue.GetMessage());
+                this.view.Display(this.dialogue.Message);
             }
         }
     }

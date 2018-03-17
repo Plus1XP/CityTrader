@@ -20,7 +20,7 @@
 
         public void CustomsNPC()
         {
-            this.view.Display(this.customsAgent.Encounter());
+            this.view.Display(this.customsAgent.EncounterMessage);
             string playerResponse = Console.ReadLine().ToLower();
             this.view.Display(this.customsAgent.PlayerInteraction(playerResponse));
         }

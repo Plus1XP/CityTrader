@@ -47,12 +47,12 @@
                     break;
                 case 3:
                     this.menuChoice = new DialoguePresenter("Enter amount between 1 - 30", 1, 30, "invalid");
-                    this.debug.AdjustDay(this.menuChoice.ShowDialogue());
+                    this.debug.Day = this.menuChoice.ShowDialogue();
                     this.RefreshMenu();
                     break;
                 case 4:
                     this.menuChoice = new DialoguePresenter("Enter amount between 0 - 1,000,000,000 \nA - Max", 0, 1000000000, "invalid", null, 1000000000, "a", "all");
-                    this.debug.AdjustMoney(this.menuChoice.ShowDialogue());
+                    this.debug.Money = this.menuChoice.ShowDialogue();
                     this.RefreshMenu();
                     break;
                 case 5:
@@ -62,12 +62,12 @@
                     break;
                 case 6:
                     this.menuChoice = new DialoguePresenter("Enter amount between 0 - 50", 0, 50, "invalid");
-                    this.debug.AdjustLevel(this.menuChoice.ShowDialogue());
+                    this.debug.Level = this.menuChoice.ShowDialogue();
                     this.RefreshMenu();
                     break;
                 case 7:
                     this.menuChoice = new DialoguePresenter("Enter amount between 0 - 50000", 0, 50000, "invalid");
-                    this.debug.AdjustStorage(this.menuChoice.ShowDialogue());
+                    this.debug.Storage = this.menuChoice.ShowDialogue();
                     this.RefreshMenu();
                     break;
                 case 8:
@@ -90,7 +90,7 @@
         private void NPCMenu()
         {
             Console.Clear();
-           this.view.Display("1 - Customs NPC");
+            this.view.Display("1 - Customs NPC");
             this.view.Display("0 - Exit \n");
             this.SelectNPC();
         }
@@ -117,7 +117,7 @@
         {
             Console.Clear();
 
-            this.view.Display(this.debug.GetStatus());
+            this.view.Display(this.debug.Status);
 
             this.view.Display("Debugging Tools \n");
 

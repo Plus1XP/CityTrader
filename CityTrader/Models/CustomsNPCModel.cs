@@ -4,17 +4,17 @@
     {
         public CustomsAgent() : base()
         {
-            this.Name = "TSA";
-            this.PenaltyPercentageLow = 20;
-            this.PenaltyPercentageHigh = 50;
+            this.name = "TSA";
+            this.penaltyPercentageLow = 20;
+            this.penaltyPercentageHigh = 50;
             this.EncounterMessage = "Do you have anything to declare? \n(Y)es or (N)o?";
-            this.EncounterRate = 6;
+            this.encounterRate = 6;
         }
 
         public override int InteractionRate()
         {
             int randomNumber;
-            randomNumber = RNGModel.RandomNumber.Next(0, this.EncounterRate);
+            randomNumber = RNGModel.RandomNumber.Next(0, this.encounterRate);
             return randomNumber;
         }
 
@@ -29,7 +29,7 @@
 
         public decimal CalculateCooperationPercentage()
         {
-            decimal customsPercentage = (decimal)PenaltyPercentageLow / 100;
+            decimal customsPercentage = (decimal)penaltyPercentageLow / 100;
             decimal customCharge = Player.Instance.Money * customsPercentage;
             return customCharge;
         }
@@ -51,7 +51,7 @@
 
         public decimal CalculatePenaltyPercentage()
         {
-            int randomPenalty = RNGModel.RandomNumber.Next(PenaltyPercentageLow + 5, PenaltyPercentageHigh + 1);
+            int randomPenalty = RNGModel.RandomNumber.Next(penaltyPercentageLow + 5, penaltyPercentageHigh + 1);
 
             // <field name="randomPenalty">Cast to a decimal instead of using "100.0" otherwise the equation will think its an int.</field>
             decimal penaltyPercentage = (decimal)randomPenalty / 100;

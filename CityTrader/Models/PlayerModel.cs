@@ -2,23 +2,35 @@
 {
     public class Player
     {
+        // <field name="eventChance">Used for debugging, hidden value from "ProductModel" to "Player.HiddenValues()".</field>
+        public int EventChance;
+
+        public int Day = 1;
+        public int Level = 1;
+        public int Storage = 1000;
+
+        public decimal Money = 1000;
+
+        public string Location = "London";
+
+        public bool HasProductPriceUpdated = false;
+        public bool IsDebtPaid = false;
+        public bool IsBuying;
+        public bool HasQuitGame;
+        public bool IsDayOver;
+
         private const float Loan = 1000;
         private const float InterestRate = 0.5f;
 
         private static Player instance = null;
 
         private float debt = 1000;
-        private float experienceModifier = 1.5f;
+        private float exponent = 1.5f;
 
-        private double currentExperiencePoints = 0;
-        private double maxExperiencePoints = 100;
-
-        private decimal score;
+        private double experience = 0;
+        private double nextLevelUp = 100;
 
         private int baseStorage = 1000;
-
-        // <field name="eventChanceResults">Used for debugging, hidden value from "ProductModel" to "Player.HiddenValues()".</field>
-        private int eventChanceResults;
 
         public static Player Instance
         {
@@ -33,48 +45,33 @@
             }
         }
 
-        public string Location { get; set; } = "London";
-
-        public int Day { get; set; } = 1;
-
-        public int Level { get; set; } = 1;
-
-        public int Storage { get; set; } = 1000;
-
-        public decimal Money { get; set; } = 1000;
-
-        public bool IsDebtPaid { get; set; } = false;
-
-        public bool IsBuying { get; set; }
-
-        public bool HasQuitGame { get; set; }
-
-        public bool IsDayOver { get; set; }
-
-        public bool HasProductPriceUpdated { get; set; } = false;
-
-        public string Status()
+        public string Status
         {
-            string dayDetails = $"Day:{Day} | City:{Location} | Money:{Money:C} | Debt:{debt:C} | Level:{Level} \n";            
-            return dayDetails;
+            get
+            {
+                return $"Day:{Day} | City:{Location} | Money:{Money:C} | Debt:{debt:C} | Level:{Level} \n";
+            }
         }
 
-        public string HiddenValues()
+        public string HiddenValues
         {
-            string hiddenValues = $"Hidden Values | EXP:{currentExperiencePoints} | MAXEXP:{maxExperiencePoints} | EventChance: {eventChanceResults} \n";
-            return hiddenValues;
+            get
+            {
+                return $"Hidden Values | EXP:{experience} | NextLevelUp:{nextLevelUp} | EventChance: {EventChance} \n";
+            }
         }
 
-        // <method name="EventResults">Used for debugging, sets hidden value from "ProductModel".</method>
-        public void EventResults(int eventChance)
+        public decimal Score
         {
-            this.eventChanceResults = eventChance;
+            get
+            {
+                return this.Money - (decimal)Loan;
+            }
         }
 
         public string FinalScore()
         {
-            this.score = this.Money - (decimal)Loan;
-            string message = $"\nFinal Score:{score:C}";
+            string message = $"\nFinal Score:{Score:C}";
             return message;
         }
 
@@ -106,19 +103,19 @@
             }
         }
 
-        public string AddExperiencePoints(int currentSalePrice, int previousSalePrice, int quantity)
+        public string AddExperiencePoints(int currentPrice, int purchasePrice, int quantity)
         {
-            long experienceGained = this.CalculateExperienceGained(currentSalePrice, previousSalePrice, quantity);
+            long experienceGained = this.CalculateExperienceGained(currentPrice, purchasePrice, quantity);
             string message = this.RewardExperienceGained(experienceGained);
             return message;
         }
 
-        public long CalculateExperienceGained(int currentSalePrice, int previousSalePrice, int quantity)
+        public long CalculateExperienceGained(int currentPrice, int purchasePrice, int quantity)
         {
             // Dividing the Exp by 100 for more managable numbers. 
             // Also dividing by level to control over leveling. 
             // Also testing a long cast to prevent overflow exceptions.
-            long experienceGained = (currentSalePrice - previousSalePrice) * (long)quantity / 100 / this.Level;
+            long experienceGained = (currentPrice - purchasePrice) * (long)quantity / 100 / this.Level;
             return experienceGained;
         }
 
@@ -126,9 +123,9 @@
         {
             string message1 = string.Empty;
             string message2 = string.Empty;
-            this.currentExperiencePoints += experienceGained;
-
-            while (this.currentExperiencePoints >= this.maxExperiencePoints)
+            this.experience += experienceGained;
+            
+            while (this.experience >= this.nextLevelUp)
             {
                 message1 = this.LevelUp();
                 message2 = this.IncreaseStorage();
@@ -140,7 +137,7 @@
         private string LevelUp()
         {
             this.Level++;
-            this.maxExperiencePoints *= this.experienceModifier * this.Level;
+            this.nextLevelUp *= this.Level * this.exponent;            
             string message = $"You have gain a level, you are now level {Level} \n";
             return message;
         }

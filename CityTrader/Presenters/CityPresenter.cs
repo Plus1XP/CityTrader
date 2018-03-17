@@ -103,7 +103,7 @@
         private void RespondToCustomsAgent()
         {
             string playerResponse;
-            this.view.Display(this.customsAgent.Encounter());
+            this.view.Display(this.customsAgent.EncounterMessage);
             playerResponse = Console.ReadLine().ToLower();
             this.view.Display(this.customsAgent.PlayerInteraction(playerResponse));
         }
@@ -119,7 +119,7 @@
         {
             Console.Clear();
 
-            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.Status);
 
             this.view.Display("Where would you like to travel to? \n");
 

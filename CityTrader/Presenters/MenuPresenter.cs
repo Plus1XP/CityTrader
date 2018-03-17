@@ -64,7 +64,7 @@
         private void PayLoan()
         {
             Console.Clear();
-            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.Status);
             this.view.Display(Player.Instance.PayLoan());
             var playerResponse = Console.ReadLine().ToLower();
             Player.Instance.PayLoan(playerResponse);
@@ -81,7 +81,7 @@
         {
             Console.Clear();
 
-            this.view.Display(Player.Instance.Status());
+            this.view.Display(Player.Instance.Status);
 
             this.view.Display("What would you like to do? \n");
 

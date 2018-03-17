@@ -2,43 +2,22 @@
 {
     public class Dialogue
     {
+        public string Prompt;
+        public string Message;
+        public string ExitMessage;
+        public string ErrorMessage;
+        public string RangeWarningMessage;
+        public string TextCommandOverride1;
+        public string TextCommandOverride2;
+
+        public int MinimumMenuChoice;
+        public int MaximumMenuChoice;
+
+        public int? CommandOverrideMenuChoice;
+
         public Dialogue()
         {
-        }
-
-        public string Prompt { get; set; }
-
-        public string Message { get; private set; }
-
-        public string ExitMessage { get; set; }
-
-        public string ErrorMessage { get; private set; }
-
-        public string RangeWarningMessage { get; set; }
-
-        public string TextCommandOverride1 { get; set; }
-
-        public string TextCommandOverride2 { get; set; }
-
-        public int MinimumMenuChoice { get; set; }
-
-        public int MaximumMenuChoice { get; set; }
-
-        public int? CommandOverrideMenuChoice { get; set; }
-
-        public string GetPrompt()
-        {
-            return this.Prompt;
-        }
-
-        public string GetMessage()
-        {
-            return this.Message;
-        }
-
-        public string GetErrorMessage()
-        {
-            return this.ErrorMessage;
+            this.SetErrorMessage();
         }
 
         public int SortResponse(string userResponse)

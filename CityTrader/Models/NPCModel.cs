@@ -2,25 +2,25 @@
 {
     public abstract class NPC
     {
+        public bool IsPlayerResponseValid;
+
+        public string EncounterMessage;
+
+        protected string name;
+
+        protected string penaltyMessageLow;
+
+        protected string penaltyMessageHigh;
+
+        protected int penaltyPercentageLow;
+
+        protected int penaltyPercentageHigh;
+
+        protected int encounterRate;
+
         public NPC()
         {
         }
-
-        public bool IsPlayerResponseValid { get; set; }
-
-        protected string Name { get; set; }
-
-        protected string EncounterMessage { get; set; }
-
-        protected string PenaltyMessageLow { get; set; }
-
-        protected string PenaltyMessageHigh { get; set; }
-
-        protected int PenaltyPercentageLow { get; set; }
-
-        protected int PenaltyPercentageHigh { get; set; }
-
-        protected int EncounterRate { get; set; }
 
         public abstract string Cooperate();
 
@@ -31,11 +31,6 @@
         public abstract string PenaltyMessage(decimal penalty);
 
         public abstract int InteractionRate();
-
-        public string Encounter()
-        {
-            return this.EncounterMessage;
-        }
 
         public string PlayerInteraction(string playerResponse)
         {            
