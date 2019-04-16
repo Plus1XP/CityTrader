@@ -1,6 +1,0 @@
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\bin\Release\CityTrader.exe.config
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\bin\Release\CityTrader.exe
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\bin\Release\CityTrader.pdb
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\obj\Release\CityTrader.csprojResolveAssemblyReference.cache
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\obj\Release\CityTrader.exe
-D:\OneDrive\Development\Repositories\CityTrader\CityTrader\obj\Release\CityTrader.pdb
