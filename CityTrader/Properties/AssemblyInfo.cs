@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CityTrader")]
 [assembly: AssemblyDescription("A console based trading game")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("House of Lafayette")]
+[assembly: AssemblyCompany("https://github.com/Plus1XP")]
 [assembly: AssemblyProduct("CityTrader")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright ©  2017 Plus1XP")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
